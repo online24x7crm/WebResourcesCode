@@ -1,0 +1,32 @@
+function FormOnloadNoteCount()
+{
+    var objectID =Xrm.Page.data.entity.getId();
+    objectID =objectID.replace("{","").replace("}","");
+    var req = new XMLHttpRequest();
+    req.open("GET", Xrm.Page.context.getClientUrl() + "/api/data/v9.1/annotations?$select=annotationid,notetext,subject&$filter=_objectid_value eq "+ objectID +"", true);
+    req.setRequestHeader("OData-MaxVersion", "4.0");
+    req.setRequestHeader("OData-Version", "4.0");
+    req.setRequestHeader("Accept", "application/json");
+    req.setRequestHeader("Content-Type", "application/json; charset=utf-8");
+    req.setRequestHeader("Prefer", "odata.include-annotations=\"*\"");
+    req.onreadystatechange = function() {
+        if (this.readyState === 4) {
+             req.onreadystatechange = null;
+			if (this.status === 200) {
+                var results = JSON.parse(this.response);
+				var numberOfNotes =  results.value.length ;
+                alert("Count : "+numberOfNotes);
+				Xrm.Page.getAttribute("new_numberOfNotes").setValue(numberOfNotes); // Create a whole number field and set the count
+
+                for (var i = 0; i < results.value.length; i++) {
+                    var annotationid = results.value[i]["annotationid"];
+                    var notetext = results.value[i]["notetext"];
+                    var subject = results.value[i]["subject"];
+                }
+            } else {
+				Xrm.Utility.alertDialog(this.statusText);
+            }
+        }
+    };
+    req.send();
+}

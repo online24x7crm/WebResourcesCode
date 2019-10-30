@@ -1,0 +1,13 @@
+//Refresh validation based on FLR status
+//modified by:online24x7
+//30-Sept-2019
+function refresh(){
+    var FLR = Xrm.Page.getAttribute("pcl_flrstatus").getValue();
+    var i = 0;
+    if(FLR == 1)
+    {
+        if(i==0)
+        Xrm.Page.data.entity.save("saveandrefresh");
+        i++;
+    }
+}

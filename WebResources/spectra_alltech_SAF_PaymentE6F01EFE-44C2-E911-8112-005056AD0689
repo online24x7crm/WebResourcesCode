@@ -1,0 +1,207 @@
+function payment() {
+    debugger;
+    try {
+        var ispaymentdone = Xrm.Page.getAttribute("alletech_ispaymentdone").getValue();
+        if (ispaymentdone)
+            Xrm.Page.getAttribute("alletech_paymentdone").setValue(true);
+        else
+            Xrm.Page.getAttribute("alletech_paymentdone").setValue(false);
+Xrm.Page.data.entity.save();
+    }
+    catch (e) { }
+}
+
+// ====== 
+//Readonly Form on saf approval
+function setFormAsReadOnly() {
+    var status = Xrm.Page.getAttribute("alletech_status").getValue();
+    if ((status == 1) || (status == 569480010) || (status == 569480007) || (status == 569480008) || (status == null)) {
+    }
+    else {
+        // define the logic here
+        disableFormFields(true);
+    }
+}
+
+function doesControlHaveAttribute(control) {
+    var controlType = control.getControlType();
+    return controlType != "iframe" && controlType != "webresource" && controlType != "subgrid";
+}
+
+function disableFormFields(onOff) {
+
+    Xrm.Page.ui.controls.forEach(function (control, index) {
+        if (doesControlHaveAttribute(control)) {
+            control.setDisabled(onOff);
+        }
+    });
+}
+
+//Readonly Form on saf approval
+function setFormAsReadOnly1() {
+    debugger;
+    var status = Xrm.Page.getAttribute("alletech_status").getValue();
+    if ((status == null)) {
+    }
+    else {
+        // define the logic here
+        disableFormFields(true);
+    }
+}
+
+function disableFormFields(onOff) {
+
+    Xrm.Page.ui.controls.forEach(function (control, index) {
+        if (doesControlHaveAttribute(control)) {
+            control.setDisabled(onOff);
+        }
+    });
+
+    var status = Xrm.Page.getAttribute("alletech_status").getValue();
+    if (status == 569480007) {
+
+        Xrm.Page.getControl("alletech_payment").setDisabled(false);
+    }
+    if (status == 569480008)
+    {
+        Xrm.Page.getControl("alletech_attachdocuments").setDisabled(false);
+    }
+}
+
+//Check login User has 'Verification Role' role
+function CheckUserRoleAndEnableSAFField() {
+    debugger;
+    var currentUserRoles = Xrm.Page.context.getUserRoles();
+    for (var i = 0; i < currentUserRoles.length; i++) {
+        var userRoleId = currentUserRoles[i];
+        //var userRoleName = GetRoleName(userRoleId);
+        if (userRoleId == "a31fb536-2ad9-e411-9432-842b2ba0f44f") {
+
+            //Saf field
+            Xrm.Page.getControl("alletech_mobileno5").setDisabled(false);
+            Xrm.Page.getControl("alletech_emailid").setDisabled(false);
+            Xrm.Page.getControl("alletech_blocknumbertowernumber").setDisabled(false);
+            Xrm.Page.getControl("alletech_housenumberplotnumberflatnumber").setDisabled(false);
+            Xrm.Page.getControl("alletech_floor").setDisabled(false);
+
+            return true;
+        }
+
+         //var status = Xrm.Page.getAttribute("alletech_status").getValue();
+        //if (userRoleId == "1fca4ed8-27d9-e411-9432-842b2ba0f44f" && status == 1) {
+
+        //    //Saf field
+        //    Xrm.Page.getControl("alletech_mobileno5").setDisabled(false);
+        //    Xrm.Page.getControl("alletech_emailid").setDisabled(false);
+        //    Xrm.Page.getControl("alletech_blocknumbertowernumber").setDisabled(false);
+        //    Xrm.Page.getControl("alletech_housenumberplotnumberflatnumber").setDisabled(false);
+        //    Xrm.Page.getControl("alletech_floor").setDisabled(false);
+
+        //    return true;
+        //}
+    }
+    return false;
+}
+
+//Readonly Form on saf approval
+function setFormAsReadOnlyOnSAF() {
+    debugger;
+    Xrm.Page.getControl("alletech_runsubmitworkflow").setDisabled(false);
+    var status = Xrm.Page.getAttribute("alletech_status").getValue();
+    
+    var currentUserRoles = Xrm.Page.context.getUserRoles();
+    for (var i = 0; i < currentUserRoles.length; i++) {
+        var userRoleId = currentUserRoles[i];
+
+        //Document Verification RoleID
+        if (userRoleId == "e80334c1-edfc-4b65-a9c6-b3f2c0849902")
+        {
+            //alert("Document Verification");
+            //Document Verification Rejected
+            if ((status == 569480008)) {
+                disableFormFields(true);
+                //Saf field
+                Xrm.Page.getControl("alletech_mobileno5").setDisabled(false);
+                Xrm.Page.getControl("alletech_emailid").setDisabled(false);
+                Xrm.Page.getControl("alletech_blocknumbertowernumber").setDisabled(false);
+                Xrm.Page.getControl("alletech_housenumberplotnumberflatnumber").setDisabled(false);
+                Xrm.Page.getControl("alletech_floor").setDisabled(false);
+                Xrm.Page.getControl("alletech_attachdocuments").setDisabled(false);
+                Xrm.Page.getControl("alletech_runsubmitworkflow").setDisabled(false);
+                Xrm.Page.getControl("alletech_status").setDisabled(false);
+            }
+
+        }
+        //Payment Verification RoleID
+        if (userRoleId == ROLE_NAME.TERRITORY_MANAGER_FTTH)
+        {
+            //alert("Payment Verification");
+            //Payment Verification Rejected
+            if ((status == 569480007)) {
+
+                //Caf field
+                Xrm.Page.getControl("alletech_mobileno5").setDisabled(false);
+                Xrm.Page.getControl("alletech_emailid").setDisabled(false);
+                Xrm.Page.getControl("alletech_blocknumbertowernumber").setDisabled(false);
+                Xrm.Page.getControl("alletech_housenumberplotnumberflatnumber").setDisabled(false);
+                Xrm.Page.getControl("alletech_floor").setDisabled(false);
+                Xrm.Page.getControl("alletech_payment").setDisabled(false);
+                Xrm.Page.getControl("alletech_runsubmitworkflow").setDisabled(false);
+                Xrm.Page.getControl("alletech_status").setDisabled(false);
+            }
+        }
+
+        //Salesperson RoleID
+        if (userRoleId == ROLE_NAME.SALES_EXECUTIVE_FTTH)
+        {
+            //alert("Salesperson");
+            //Payment Verification Pending, Document Verification Pending, Installation Completed, Installation Pending, Approved, Installation Scheduling Pending, Installation Scheduling Done
+            if ((status == 1) || (status == 569480010) || (status == 569480002) || (status == 569480003) || (status == 2) || (status == 569480000) || (status == 569480001)) {
+                disableFormFields(true);
+                Xrm.Page.getControl("alletech_runsubmitworkflow").setDisabled(false);
+                Xrm.Page.getControl("alletech_status").setDisabled(false);
+            }
+            //Payment Verification Rejected
+            if ((status == 569480007)) {
+                disableFormFields(true);
+                Xrm.Page.getControl("alletech_payment").setDisabled(false);
+                Xrm.Page.getControl("alletech_runsubmitworkflow").setDisabled(false);
+                Xrm.Page.getControl("alletech_status").setDisabled(false);
+            }
+            //Document Verification Rejected
+            if ((status == 569480008)) {
+                disableFormFields(true);
+                Xrm.Page.getControl("alletech_attachdocuments").setDisabled(false);
+                Xrm.Page.getControl("alletech_runsubmitworkflow").setDisabled(false);
+                Xrm.Page.getControl("alletech_status").setDisabled(false);
+            }
+        }      
+    }
+}
+
+
+function disableFormFields(onOff) {
+    Xrm.Page.ui.controls.forEach(function (control, index) {
+        if (doesControlHaveAttribute(control)) {
+            control.setDisabled(onOff);
+        }
+    });
+}
+////////////////////////////
+
+function submit()
+{ 
+            debugger;
+           setTimeout("submit();", 3000);
+           var value1 = Xrm.Page.getAttribute("alletech_status").getValue();
+            var value2 = Xrm.Page.getAttribute("alletech_runsubmitworkflow").getValue();
+   if(value1 == 569480009 && value2 == 1)
+          {
+
+       var btn = window.top.document.getElementById("alletech_saf|NoRelationship|Form|alletech.alletech_saf.Button1.Button");
+       
+            btn.style.display = 'false';
+             
+          }
+ 
+}

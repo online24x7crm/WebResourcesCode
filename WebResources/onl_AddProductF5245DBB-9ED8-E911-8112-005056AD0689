@@ -1,0 +1,321 @@
+function CallbackFunction(returnValue) {
+    if (returnValue)
+        Xrm.Page.ui.controls.get("opportunityproductsGrid").refresh();
+}
+
+function onLoadOpp() {
+    debugger;
+
+    //$("#opportunityproductsGrid_contextualButtonsContainer").before("<div  id='addNewDiv' style='position: absolute; top: 0px; right: 0px; bottom: 0px; padding-right: 50px;'><img id='addNew' src='/webresources/spectra_plusbutton.png'  style='margin-bottom: 0px; border-top-width: 55px; padding-top: 0px; padding-bottom: 0px; padding-right: 40px; border-bottom-width: 55px;'></div>");
+    //$("#opportunityproductsGrid_contextualButtonsContainer").after("<div id='teamTypeId' style='position: absolute;right: 0px;left: 200px;'></div>");
+
+
+    $("#opportunityproductsGrid_addImageButton").click(function (event) {
+
+        debugger;
+        var id = Xrm.Page.data.entity.getId().replace("{", "").replace("}", "");
+        var priceLevelId = Xrm.Page.getAttribute("pricelevelid").getValue();
+        if (priceLevelId == null) {
+            alert("You must select a price list before attempting to add a product.");
+            setTimeout(function () {
+                document.getElementById("ProductGridFlyout_flyOut").style.display = "none";
+            }, 200);
+            return;
+        }
+        var customerSegmentCode = Xrm.Page.getAttribute("spectra_customersegmentcode").getValue();
+
+        if (customerSegmentCode == null) {
+            alert("Please select a customer segment before attempting to add a product.");
+
+            setTimeout(function () {
+                document.getElementById("ProductGridFlyout_flyOut").style.display = "none";
+            }, 200);
+            return;
+        }
+
+        var oppAttributes = Xrm.Page.data.entity.attributes.get();
+        if (oppAttributes != null) {
+            for (var i in oppAttributes) {
+                if (oppAttributes[i].getIsDirty()) {
+                    alert("Please Save the form and try again");
+                    setTimeout(function () {
+                        document.getElementById("ProductGridFlyout_flyOut").style.display = "none";
+                    }, 200);
+                    return;
+                }
+            }
+        }
+
+
+        var url = "WebResources/spectra_AddExistingProduct";
+        //open dialog
+        //Xrm.Internal.openDialog(Mscrm.CrmUri.create(url).toString(), DialogOptions, null, null, CallbackFunction);
+
+        //var obj = new Object();
+        //obj.Oppty = id;
+        //obj.Price = priceLevelId[0].id.replace("{", "").replace("}", "");
+        //obj.Seg = customerSegmentCode;
+        //var oReturnValue = window.showModalDialog(url, obj, "dialogwidth: 55; dialogheight: 55; resizable: yes");
+
+        //if (oReturnValue == true)
+        //    Xrm.Utility.openEntityForm("opportunity", id);
+
+        var x = screen.width / 2 - 700 / 2;
+        var y = screen.height / 2 - 450 / 2;
+
+        myWindow = window.open(url, "_blank", 'height=485,width=700,left=' + x + ',top=' + y);
+
+
+        myWindow.onunload = function () {
+            //window.location.reload(true);
+            window.opener.location.reload();
+            Xrm.Page.ui.controls.get("opportunityproductsGrid").refresh();
+            var subgrid = Xrm.Page.ui.controls.get("opportunityproductsGrid");
+            subgrid.refresh();
+        }
+
+        //myWindow.opener.parent.focus();
+
+        setTimeout(function () {
+            document.getElementById("ProductGridFlyout_flyOut").style.display = "none";
+        }, 200);
+    });
+}
+
+
+function approval() {
+    //alert("hi");
+    debugger;
+    var oppId = Xrm.Page.data.entity.getId();
+    var redundancy = Xrm.Page.getAttribute("alletech_redundancyrequired").getValue();
+
+    var clientURL = Xrm.Page.context.getClientUrl();
+    var urlfeas = clientURL + "/XRMServices/2011/Organizationdata.svc/alletech_feasibilitySet?$select=alletech_FeasiblityStatus&$filter=alletech_Opportunity/Id eq (guid'" + oppId + "')";
+    var feasible = callAjax(urlfeas, "GET", false);
+
+    if (feasible != null && feasible.results.length > 0) {
+        for (var i = 0; i < feasible.results.length; i++) {
+            if (feasible.results[i].alletech_FeasiblityStatus != null && feasible.results[i].alletech_FeasiblityStatus.Value != 1) {
+                alert("please complete the Feasiblity record");
+                return;
+            }
+            //if (!redundancy)
+            //    break;
+        }
+    }
+    else {
+        //alletech_buildingname
+        var building = Xrm.Page.getAttribute("alletech_buildingname").getValue();
+
+        var urlbuild = clientURL + "/XRMServices/2011/Organizationdata.svc/alletech_buildingSet?$select=alletech_BuildingStatus&$filter=alletech_buildingId eq (guid'" + building[0].id.replace("{", "").replace("}", "") + "')";
+        var build = callAjax(urlbuild, "GET", false);
+
+        if (build != null && build.results.length > 0) {
+            if (build.results[0].alletech_BuildingStatus != null && build.results[0].alletech_BuildingStatus.Value == 1) {//Non RFS
+                alert("please create Feasiblity record");
+                return;
+            }
+        }
+    }
+
+    var url = Xrm.Page.context.getClientUrl();
+    url = url + "/XRMServices/2011/Organization.svc/web";
+    var requestMain = "";
+
+    requestMain = "<s:Envelope xmlns:s='http://schemas.xmlsoap.org/soap/envelope/'>" +
+        "  <s:Body>" +
+        "    <Execute xmlns='http://schemas.microsoft.com/xrm/2011/Contracts/Services' xmlns:i='http://www.w3.org/2001/XMLSchema-instance'>" +
+        "      <request xmlns:a='http://schemas.microsoft.com/xrm/2011/Contracts'>" +
+        "        <a:Parameters xmlns:b='http://schemas.datacontract.org/2004/07/System.Collections.Generic'>" +
+        "          <a:KeyValuePairOfstringanyType>" +
+        "            <b:key>Target</b:key>" +
+        "            <b:value i:type='a:EntityReference'>" +
+        "              <a:Id>" + oppId + "</a:Id>" +
+        "              <a:KeyAttributes xmlns:c='http://schemas.microsoft.com/xrm/7.1/Contracts' />" +
+        "              <a:LogicalName>opportunity</a:LogicalName>" +
+        "              <a:Name i:nil='true' />" +
+        "              <a:RowVersion i:nil='true' />" +
+        "            </b:value>" +
+        "          </a:KeyValuePairOfstringanyType>" +
+        "        </a:Parameters>" +
+        "        <a:RequestId i:nil='true' />" +
+        "        <a:RequestName>spectra_CreateApprovals</a:RequestName>" +
+        "      </request>" +
+        "    </Execute>" +
+        "  </s:Body>" +
+        "</s:Envelope>";
+
+    var copiedQuoteId = null;
+
+    $ = parent.$;
+    $.ajax({
+        type: "POST",
+        contentType: "text/xml; charset=utf-8",
+        async: false,
+        datatype: "json",
+        url: url,
+        Accept: "application/xml, text/xml, */*",
+        data: requestMain,
+        beforeSend: function (XMLHttpRequest) {
+            //Specifying this header ensures that the results will be returned as JSON.
+            XMLHttpRequest.setRequestHeader("SOAPAction", "http://schemas.microsoft.com/xrm/2011/Contracts/Services/IOrganizationService/Execute");
+        },
+        success: function (data, textStatus, xhr) {
+            Xrm.Page.ui.controls.get("Approvals").refresh();
+            Xrm.Page.ui.refreshRibbon();
+            //var str = xhr.responseXML.firstChild.innerHTML;
+            //if (str != undefined || str != null) {
+            //    copiedQuoteId = str.slice(str.indexOf("<a:Id>") + 6, str.indexOf("</a:Id>"));
+            //}
+            //else {
+            //    copiedQuoteId = xhr.responseXML.getElementsByTagName("a:Id")[0].textContent;
+            //}
+            //Xrm.Utility.openEntityForm("hw_salesquote", copiedQuoteId);
+        },
+        error: function (XMLHttpRequest, textStatus, errorThrown) {
+            var e = XMLHttpRequest.responseXML.getElementsByTagName("faultstring")[0].textContent;
+            e = e.replace("Unexpected exception from plug-in (Execute): QMS.Workflows.CopySalesQuote: System.Exception:", "");
+            var x = screen.width / 3;
+            var y = screen.height / 2.4;
+            var myWindow = window.open("", "MsgWindow", "directories=no,titlebar=no,toolbar=no,location=no,status=no,menubar=no,scrollbars=no,resizable=no,width=500, height=50, left=" + x + ",top=" + y);
+            myWindow.document.write("<html><head><meta charset='utf-8'><meta></head><body style='text-align: left; color: rgb(60, 60, 60); font-family: Segoe UI; font-size: 12px;'>");
+            myWindow.document.getElementsByTagName('body')[0].innerHTML = '';
+            myWindow.document.write(e);
+            myWindow.document.write("</body></html>");
+            myWindow.document.focus();
+        }
+    });
+}
+
+
+function hideWonButton() {
+    //HidePlusButton();
+    debugger;
+    var formName = Xrm.Page.getAttribute("alletech_businesssegmentglb").getValue()[0].name;
+    if (formName == "Business") {
+        var oppId = Xrm.Page.data.entity.getId();
+        var clientURL = Xrm.Page.context.getClientUrl();
+        var urlOpp = clientURL + "/XRMServices/2011/Organizationdata.svc/OpportunitySet(guid'" + oppId + "')?$select=StatusCode,spectra_ApprovalRequiredFlag";
+        var opp = callAjax(urlOpp, "GET", false);
+        if (opp != null && opp != undefined) {
+            if (opp.spectra_ApprovalRequiredFlag != null && opp.spectra_ApprovalRequiredFlag == false)
+                return true;
+            else if (opp.spectra_ApprovalRequiredFlag != null && opp.spectra_ApprovalRequiredFlag == true && opp.StatusCode.Value == 569480014)
+                return true;
+            else if (opp.spectra_ApprovalRequiredFlag == null)
+                return true;
+
+        }
+    }
+    else {
+        return true;
+    }
+    return false;
+}
+
+
+function hideStatusForHome() {
+    var formName = Xrm.Page.ui.formSelector.getCurrentItem().getLabel();
+    if (formName == "Home Opportunity Form") {
+        Xrm.Page.getControl("header_statuscode").removeOption(569480013);
+        Xrm.Page.getControl("header_statuscode").removeOption(569480014);
+    }
+}
+
+function hideSubmitForApprovalButton() {
+    debugger;
+    //var formName = Xrm.Page.ui.formSelector.getCurrentItem().getLabel();
+    //if (formName == "Business Opportunity Form") {
+
+    try {
+        var formName = Xrm.Page.getAttribute("alletech_businesssegmentglb").getValue()[0].name;
+        if (formName == "Business") {
+            var oppId = Xrm.Page.data.entity.getId();
+            var clientURL = Xrm.Page.context.getClientUrl();
+            var urlOpp = clientURL + "/XRMServices/2011/Organizationdata.svc/OpportunitySet(guid'" + oppId + "')?$select=spectra_ApprovalRequiredFlag";
+            var opp = callAjax(urlOpp, "GET", false);
+            //var opp = XrmServiceToolkit.Soap.Retrieve("alletech_building", lookupRecordGuid, cols);
+            if (opp != null && opp != undefined) {
+                if (opp.spectra_ApprovalRequiredFlag != null && opp.spectra_ApprovalRequiredFlag == true) {
+                    //var urlApproval = clientURL + "/XRMServices/2011/Organizationdata.svc/spectra_approvalSet?$select=spectra_name&$filter=spectra_OpportunityId/Id eq (guid'" + oppId + "') and statecode/Value eq 0";
+                    var urlApproval = clientURL + "/XRMServices/2011/Organizationdata.svc/spectra_approvalSet?$select=spectra_name&$filter=spectra_OpportunityId/Id eq (guid'" + oppId + "') and statecode/Value eq 0 and statuscode/Value ne 111260001";
+                    var approval = callAjax(urlApproval, "GET", false);
+                    if (approval.results != null && approval.results.length == 0)
+                        return true;
+                }
+                else if (opp.spectra_ApprovalRequiredFlag != null && opp.spectra_ApprovalRequiredFlag == false)
+                    return false;
+            }
+            else
+                return false;
+        }
+        else 
+            return false;
+    }
+    catch(ex)
+    {
+      return false;
+    }
+}
+
+function ApprovalRequiredFlagChange() {
+    Xrm.Page.ui.refreshRibbon();
+}
+
+function societyBuildingOnchange() {
+    debugger;
+    var lookupObj = Xrm.Page.getAttribute("alletech_buildingname");
+    if (lookupObj != null) {
+        var lookupObjValue = lookupObj.getValue();
+        if (lookupObjValue != null) {
+            lookupRecordGuid = lookupObjValue[0].id; // To get record GUID            
+            var cols = ["alletech_buildingstatus"];
+            var building = XrmServiceToolkit.Soap.Retrieve("alletech_building", lookupRecordGuid, cols);
+            if (building.attributes["alletech_buildingstatus"] != undefined) {
+
+                var obj = building.attributes["alletech_buildingstatus"];
+                if (obj != null) {
+                    var optionSetValue = obj.value;
+                    if (optionSetValue == 5 || optionSetValue == 6 || optionSetValue == 2 || optionSetValue == 3 || optionSetValue == 4) { Xrm.Page.getAttribute("spectra_lastmileconnectivity").setValue(111260000); }
+                    if (optionSetValue == 1) {
+                        Xrm.Page.getAttribute("spectra_lastmileconnectivity").setValue(111260001);
+                    }
+                }
+            }
+        }
+    }
+}
+
+function HidePlusButton() {
+    debugger;
+    $("#opportunityproductsGrid_addImageButtonImage").css("display", "none");
+}
+
+function callAjax(url, type, async) {
+    var record = null;
+    $ = parent.$;
+    $.support.cors = true;
+    $.ajax({
+        url: url,
+        type: type,
+        contentType: "application/json;charset=utf-8",
+        dataType: "json",
+        async: async,
+        beforeSend: function (XMLHttpRequest) {
+            //Specifying this header ensures that the results will be returned as JSON.
+            XMLHttpRequest.setRequestHeader("Accept", "application/json");
+
+        },
+        success: function (data, textStatus, XMLHttpRequest) {
+            record = data.d;
+
+        },
+
+        error: function (XMLHttpRequest, textStatus, errorThrown) {
+            alert("An error has occurred with status" + textStatus + " at " + errorThrown);
+        }
+
+    });
+    //Returns the Retrieved record
+    return record;
+}

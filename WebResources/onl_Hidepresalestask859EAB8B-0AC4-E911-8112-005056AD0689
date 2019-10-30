@@ -1,0 +1,76 @@
+function Hide() {
+ 
+   debugger;
+   
+ var salesperson2 = "A8E10093-1782-E411-93EB-842B2BA0F44F";
+    
+
+
+if(salesperson2user="A8E10093-1782-E411-93EB-842B2BA0F44F")
+{
+    
+}
+else
+{
+
+ 
+}
+
+
+  var currentUser = Xrm.Page.context.getUserName();
+ 
+   // alert(currentUserRoles);
+  
+  for (var i = 0; i < currentUserRoles.length; i++) {
+       
+ var userId = currentUser[i];
+        
+var userName = GetUserName(userId);
+        
+    
+if(userName == "Salesperson2")
+    
+    {
+            
+reject= false;
+            
+hideButtons(Reject);
+
+ 
+
+hideButtons(Approve);    
+    }
+          
+else{
+        
+Xrm.Page.getControl("header_save").setVisible(true);
+     
+Xrm.Page.getControl("header_New").setVisible(true);      
+Xrm.Page.getControl("header_save & close").setVisible(true);
+           
+Xrm.Page.getControl("header_IVR Form").setVisible(true);
+           
+Xrm.Page.getControl("header_submit for approval").setVisible(true);
+        
+        
+}
+ 
+   }
+}        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

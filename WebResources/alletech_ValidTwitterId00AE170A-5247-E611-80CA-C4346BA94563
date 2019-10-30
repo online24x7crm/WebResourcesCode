@@ -1,0 +1,338 @@
+function twittervalid() {
+    var tid = Xrm.Page.getAttribute("alletech_twitterid").getValue();
+    if (tid != null) {
+        var patt = new RegExp("^@");
+        var res = patt.test(tid);
+        if (res == false) {
+            alert("Please enter valid Twitter id");
+            //Xrm.Page.getAttribute("alletech_twitterid").setValue(null);
+        }
+    }
+}
+
+
+function HideFeasibility() {
+    var lookupObj = Xrm.Page.getAttribute("alletech_buildingname");
+    if (lookupObj != null) {
+        var lookupObjValue = lookupObj.getValue();
+        if (lookupObjValue != null) {
+            lookupRecordGuid = lookupObjValue[0].id; // To get record GUID            
+            var cols = ["alletech_buildingstatus"];
+            var building = XrmServiceToolkit.Soap.Retrieve("alletech_building", lookupRecordGuid, cols);
+            if (building.attributes["alletech_buildingstatus"] != undefined) {
+
+                var obj = building.attributes["alletech_buildingstatus"];
+                if (obj != null) {
+                    var optionSetValue = obj.value;
+                    if (optionSetValue == 1) {
+                        Xrm.Page.ui.tabs.get("tab_Feasibility").sections.get("tab_7_section_1").setVisible(true);
+                        Xrm.Page.ui.tabs.get("tab_Feasibility").setVisible(true);
+                        //Xrm.Page.ui.tabs.get("tab_Feasibility").setVisible(true);
+                        Xrm.Page.getControl("alletech_redundancyrequired").setVisible(true);
+                    }
+                    else {
+                        Xrm.Page.ui.tabs.get("tab_Feasibility").sections.get("tab_7_section_1").setVisible(false);
+                        Xrm.Page.ui.tabs.get("tab_Feasibility").setVisible(false);
+                        // Xrm.Page.ui.tabs.get("tab_Feasibility").setVisible(false);
+                        Xrm.Page.getControl("alletech_redundancyrequired").setVisible(false);
+                    }
+                }
+            }
+        }
+    }
+}
+
+
+function RackRequiredAlert() {
+
+    var flag = Xrm.Page.data.entity.attributes.get("spectra_rackrequired").getIsDirty();
+    if (flag) {
+        var obj = Xrm.Page.getAttribute("spectra_rackrequired");
+        if (obj != null) {
+            var optionSetValue = obj.getValue();
+            if (optionSetValue == 111260000) {
+
+                alert("Please Add 'Premium Installation Charges' Product in Price List Items");
+            }
+            else if (optionSetValue == 111260001) {
+                alert("Remove Rack Products if 'Premium Installation Charges' already added");
+            }
+        }
+    }
+}
+
+//function ExpectedTimeSlotMandate() {
+
+// Xrm.Page.getAttribute("spectra_expectedinstallationdate").setRequiredLevel(true);
+//Xrm.Page.getAttribute("spectra_timeslotglobal").setRequiredLevel(true);
+//}
+
+function ExpectedMandate() {
+
+    Xrm.Page.getAttribute("spectra_expectedinstallationdate").setRequiredLevel(true);
+}
+
+
+function CheckReason() {
+    var subSegName = Xrm.Page.getAttribute("alletech_subbusinesssegment").getValue()[0].name;
+    if (subSegName != "SDWAN") {
+        if (Xrm.Page.getAttribute("evaluatefit") != null) {
+            var mandate = Xrm.Page.getAttribute("evaluatefit").getValue();
+            if (mandate) {
+                Xrm.Page.getAttribute("customerneed").setRequiredLevel("required");//reason
+            }
+            else {
+                Xrm.Page.getAttribute("customerneed").setRequiredLevel("none");//reason
+            }
+        }
+    }
+    else {
+        Xrm.Page.getAttribute("customerneed").setRequiredLevel("none");//reason
+    }
+}
+function checkDate1() {
+    var instdate1 = Xrm.Page.getAttribute("spectra_targetinstalationperiod").getValue();
+    var today1 = new Date();
+    today1.setHours(0, 0, 0, 0);
+    if (instdate1 <= today1) {
+        alert("Target Installation period cannot be past date  or current date, please select only future date.");
+        Xrm.Page.getAttribute("spectra_targetinstalationperiod").setValue(null);
+    }
+}
+
+function getAllTabs() {
+    //debugger;
+    var SRM1 = XrmServiceToolkit.Soap.IsCurrentUserRole("Collection Coordinator (SRM)");
+    var SRM2 = XrmServiceToolkit.Soap.IsCurrentUserRole("Collection Users (SRM)");
+    var obj = Xrm.Page.getAttribute("alletech_status");
+    if (obj != null) {
+        var status = obj.getValue();
+    }
+    if (SRM1 == true || SRM2 == true) {
+        //var tabs = ["tab_10", "tab_13", "tab_12", "tab_14", "tab_6", "tab_7", "tab_9", "tab_8"];
+        //for (var i = 0; i <= tabs.length; i++) {
+        //    tabdisable(tabs[i], true);
+        //}
+        if (status != 569480003 && status != 569480002) {
+            Xrm.Page.ui.controls.get("spectra_buildingpermissionsforwiringandinstall").setDisabled(false);
+            Xrm.Page.getAttribute("spectra_buildingpermissionsforwiringandinstall").setRequiredLevel("required");
+            Xrm.Page.ui.controls.get("spectra_rackspaceavailable").setDisabled(false);
+            Xrm.Page.getAttribute("spectra_rackspaceavailable").setRequiredLevel("required");
+            Xrm.Page.ui.controls.get("spectra_spaceonthewalltomounttherack").setDisabled(false);
+            Xrm.Page.getAttribute("spectra_spaceonthewalltomounttherack").setRequiredLevel("required");
+            Xrm.Page.ui.controls.get("spectra_serverroomprotectedthroughearthing").setDisabled(false);
+            Xrm.Page.getAttribute("spectra_serverroomprotectedthroughearthing").setRequiredLevel("required");
+            Xrm.Page.ui.controls.get("spectra_technicalpersonemail").setDisabled(false);
+            Xrm.Page.getAttribute("spectra_technicalpersonemail").setRequiredLevel("required");
+            Xrm.Page.ui.controls.get("spectra_acpowersupplyhaveabackup").setDisabled(false);
+            Xrm.Page.getAttribute("spectra_acpowersupplyhaveabackup").setRequiredLevel("required");
+            Xrm.Page.ui.controls.get("spectra_serverroomavaliable").setDisabled(false);
+            Xrm.Page.getAttribute("spectra_serverroomavaliable").setRequiredLevel("required");
+            Xrm.Page.ui.controls.get("spectra_orderedarackfromspectra").setDisabled(false);
+            Xrm.Page.getAttribute("spectra_orderedarackfromspectra").setRequiredLevel("required");
+            Xrm.Page.ui.controls.get("spectra_identifiedfiberwireentrypoint").setDisabled(false);
+            Xrm.Page.getAttribute("spectra_identifiedfiberwireentrypoint").setRequiredLevel("required");
+            Xrm.Page.ui.controls.get("spectra_technicalpersonname").setDisabled(false);
+            Xrm.Page.getAttribute("spectra_technicalpersonname").setRequiredLevel("required");
+            Xrm.Page.ui.controls.get("spectra_technicalpersonphone").setDisabled(false);
+            Xrm.Page.getAttribute("spectra_technicalpersonphone").setRequiredLevel("required");
+            Xrm.Page.ui.controls.get("spectra_concernedauthorityname").setDisabled(false);
+            Xrm.Page.getAttribute("spectra_concernedauthorityname").setRequiredLevel("required");
+            Xrm.Page.ui.controls.get("spectra_concernedauthorityemail").setDisabled(false);
+            Xrm.Page.getAttribute("spectra_concernedauthorityemail").setRequiredLevel("required");
+            Xrm.Page.ui.controls.get("spectra_concernedauthorityphone").setDisabled(false);
+            Xrm.Page.getAttribute("spectra_concernedauthorityphone").setRequiredLevel("required");
+            Xrm.Page.ui.controls.get("alletech_timelineforlinkinstallation").setDisabled(false);
+            Xrm.Page.getAttribute("alletech_timelineforlinkinstallation").setRequiredLevel("required");
+            Xrm.Page.ui.controls.get("spectra_readiness").setDisabled(false);
+            Xrm.Page.getAttribute("spectra_readiness").setRequiredLevel("required");
+
+            Xrm.Page.ui.controls.forEach(function (control, i) {
+                if (control && control.getDisabled && !control.getDisabled()) {
+                    if (control.getName() != "spectra_buildingpermissionsforwiringandinstall" && control.getName() != "spectra_rackspaceavailable" && control.getName() != "spectra_spaceonthewalltomounttherack" && control.getName() != "spectra_serverroomprotectedthroughearthing" && control.getName() != "spectra_technicalpersonemail" && control.getName() != "spectra_acpowersupplyhaveabackup" && control.getName() != "spectra_serverroomavaliable" && control.getName() != "spectra_orderedarackfromspectra" && control.getName() != "spectra_identifiedfiberwireentrypoint" && control.getName() != "spectra_technicalpersonname" && control.getName() != "spectra_technicalpersonphone" && control.getName() != "spectra_concernedauthorityname" && control.getName() != "spectra_concernedauthorityemail" && control.getName() != "spectra_concernedauthorityphone" && control.getName() != "alletech_timelineforlinkinstallation" && control.getName() != "spectra_readiness") {
+                        control.setDisabled(true);
+                    }
+
+                }
+            });
+        }
+        else {
+            Xrm.Page.ui.controls.forEach(function (control, i) {
+                if (control && control.getDisabled && !control.getDisabled()) {
+                    control.setDisabled(true);
+                }
+            });
+        }
+
+    }
+    else {
+        Xrm.Page.ui.controls.get("spectra_buildingpermissionsforwiringandinstall").setDisabled(true);
+        Xrm.Page.getAttribute("spectra_buildingpermissionsforwiringandinstall").setRequiredLevel("none");
+        Xrm.Page.ui.controls.get("spectra_rackspaceavailable").setDisabled(true);
+        Xrm.Page.getAttribute("spectra_rackspaceavailable").setRequiredLevel("none");
+        Xrm.Page.ui.controls.get("spectra_spaceonthewalltomounttherack").setDisabled(true);
+        Xrm.Page.getAttribute("spectra_spaceonthewalltomounttherack").setRequiredLevel("none");
+        Xrm.Page.ui.controls.get("spectra_serverroomprotectedthroughearthing").setDisabled(true);
+        Xrm.Page.getAttribute("spectra_serverroomprotectedthroughearthing").setRequiredLevel("none");
+        Xrm.Page.ui.controls.get("spectra_technicalpersonemail").setDisabled(true);
+        Xrm.Page.getAttribute("spectra_technicalpersonemail").setRequiredLevel("none");
+        Xrm.Page.ui.controls.get("spectra_acpowersupplyhaveabackup").setDisabled(true);
+        Xrm.Page.getAttribute("spectra_acpowersupplyhaveabackup").setRequiredLevel("none");
+        Xrm.Page.ui.controls.get("spectra_serverroomavaliable").setDisabled(true);
+        Xrm.Page.getAttribute("spectra_serverroomavaliable").setRequiredLevel("none");
+        Xrm.Page.ui.controls.get("spectra_orderedarackfromspectra").setDisabled(true);
+        Xrm.Page.getAttribute("spectra_orderedarackfromspectra").setRequiredLevel("none");
+        Xrm.Page.ui.controls.get("spectra_identifiedfiberwireentrypoint").setDisabled(true);
+        Xrm.Page.getAttribute("spectra_identifiedfiberwireentrypoint").setRequiredLevel("none");
+        Xrm.Page.ui.controls.get("spectra_technicalpersonname").setDisabled(true);
+        Xrm.Page.getAttribute("spectra_technicalpersonname").setRequiredLevel("none");
+        Xrm.Page.ui.controls.get("spectra_technicalpersonphone").setDisabled(true);
+        Xrm.Page.getAttribute("spectra_technicalpersonphone").setRequiredLevel("none");
+        Xrm.Page.ui.controls.get("spectra_concernedauthorityname").setDisabled(true);
+        Xrm.Page.getAttribute("spectra_concernedauthorityname").setRequiredLevel("none");
+
+        Xrm.Page.ui.controls.get("spectra_concernedauthorityemail").setDisabled(true);
+        Xrm.Page.getAttribute("spectra_concernedauthorityemail").setRequiredLevel("none");
+        Xrm.Page.ui.controls.get("spectra_concernedauthorityphone").setDisabled(true);
+        Xrm.Page.getAttribute("spectra_concernedauthorityphone").setRequiredLevel("none");
+        Xrm.Page.ui.controls.get("alletech_timelineforlinkinstallation").setDisabled(true);
+        Xrm.Page.getAttribute("alletech_timelineforlinkinstallation").setRequiredLevel("none");
+        Xrm.Page.ui.controls.get("spectra_readiness").setDisabled(true);
+        Xrm.Page.getAttribute("spectra_readiness").setRequiredLevel("none");
+    }
+}
+
+function tabdisable(tabname, disablestatus) {
+    var tab = Xrm.Page.ui.tabs.get(tabname);
+    if (tab == null) alert("Error: The tab: " + tabname + " is not on the form");
+    else {
+        var tabsections = tab.sections.get();
+        for (var i in tabsections) {
+            var secname = tabsections[i].getName();
+            sectiondisable(secname, disablestatus);
+        }
+    }
+}
+
+
+function sectiondisable(sectionname, disablestatus) {
+    var ctrlName = Xrm.Page.ui.controls.get();
+    for (var i in ctrlName) {
+        var ctrl = ctrlName[i];
+        if (ctrl.getParent() == null) {
+            var ctrlSection = ctrl.getName();
+        }
+        else {
+            var ctrlSection = ctrl.getParent().getName();
+        } if (ctrlSection == sectionname) {
+            ctrl.setDisabled(disablestatus);
+        }
+    }
+}
+
+function IVREnableDisable() {
+    //debugger;
+    var Xrm = window.Xrm;
+    if (Xrm.Page.context.getQueryStringParameters().pr_Mobile != null && Xrm.Page.context.getQueryStringParameters().pr_Mobile != 'undefined') {
+        var Mobile = Xrm.Page.context.getQueryStringParameters().pr_Mobile;
+        //mobile = "9848441951";
+        if (Mobile != null && Mobile != undefined) {
+            Xrm.Page.ui.tabs.get("IVR_Info").setVisible(true);
+        }
+        else {
+            Xrm.Page.ui.tabs.get("IVR_Info").setVisible(false);
+        }
+    }
+}
+
+function countryIndia() {
+    var india = new Array();
+    india[0] = new Object();
+    india[0].id = "6BF173AC-4784-E411-93F0-842B2BA0F44F";
+    india[0].name = "India";
+    india[0].entityType = "alletech_country";
+    Xrm.Page.getAttribute("alletech_completecountry").setValue(india);
+ 
+   Xrm.Page.getAttribute("alletech_completecountry").setSubmitMode("always");
+   Xrm.Page.data.entity.save();
+}
+
+function HideTrailUpgrade() {
+
+    //debugger;
+    if (Xrm.Page.data.entity.attributes.get("alletech_designation").getValue() != null) {
+        var Tupgrade = Xrm.Page.data.entity.attributes.get("alletech_designation").getValue();
+        if (Tupgrade == null) {
+            Xrm.Page.ui.controls.get("alletech_designation").setVisible(false);
+            Xrm.Page.ui.controls.get("alletech_accountshortname").setVisible(false)
+        }
+        else {
+            Xrm.Page.ui.controls.get("alletech_designation").setVisible(true);
+            Xrm.Page.ui.controls.get("alletech_accountshortname").setVisible(true);
+            Xrm.Page.ui.setFormNotification("This account is under Temporary Upgrade", "WARNING");
+        }
+    }
+    //check massoutage
+    var fetchxml = "<fetch version='1.0' output-format='xml-platform' mapping='logical' distinct='false'>" +
+        "  <entity name='spectra_massoutageaccount'>" +
+        "    <attribute name='spectra_massoutageaccountid' />" +
+        "    <order attribute='createdon' descending='true' />" +
+        "    <filter type='and'>" +
+        "      <condition attribute='spectra_account' operator='eq' uiname='' uitype='account' value='" + Xrm.Page.data.entity.getId() + "' />" +
+        "    </filter>" +
+        "    <link-entity name='spectra_massoutage' from='spectra_massoutageid' to='spectra_massoutage' alias='aa'>" +
+        "      <attribute name='spectra_etrdate' />" +
+        "      <filter type='and'>" +
+        "        <condition attribute='statuscode' operator='eq' value='111260002' />" +
+        "      </filter>" +
+        "    </link-entity>" +
+        "  </entity>" +
+        "</fetch>";
+    var retrieveMOA = XrmServiceToolkit.Soap.Fetch(fetchxml);
+
+    if (retrieveMOA.length > 0) {
+        var previousetr = null;
+        for (var i = 0; i < retrieveMOA.length; i++) {
+            var etr = retrieveMOA[i].attributes["aa.spectra_etrdate"].value;//.formattedValue;
+            if (previousetr != null && previousetr < etr)
+                previousetr = etr;
+            else if (previousetr == null)
+                previousetr = etr;
+        }
+        var d1 = new Date();
+
+        if (d1 < previousetr) {
+            previousetr = previousetr.toString();
+            if (previousetr.indexOf("UTC") > 0) {
+                var res = previousetr.split("UTC");
+                previousetr = res[0];
+            }
+        }
+        else
+		{
+			previousetr = previousetr.toString();
+            if (previousetr.indexOf("UTC") > 0) 
+            {
+                var res = previousetr.split("UTC");
+                previousetr = res[0];
+            }
+			previousetr = previousetr + " - Lapsed";
+		}
+        Xrm.Page.ui.setFormNotification("This account is under massoutage, ETR :  " + previousetr, "WARNING");
+    }
+}
+
+function setSiteReadiDate()
+{
+	//debugger;
+	var siteReadStatus = Xrm.Page.getAttribute("spectra_sitereadinesscompletedby").getValue();
+	var currDate = new Date();   
+	if(siteReadStatus == 111260001 || siteReadStatus == 111260000)
+	{
+		Xrm.Page.getAttribute("alletech_channelpartnerdate").setValue(currDate);
+		Xrm.Page.getAttribute("alletech_channelpartnerdate").setSubmitMode("always");
+	}
+	else
+		Xrm.Page.getAttribute("alletech_channelpartnerdate").setValue(null);
+}
+

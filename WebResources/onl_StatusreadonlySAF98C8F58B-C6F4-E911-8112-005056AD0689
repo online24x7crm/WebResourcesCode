@@ -1,0 +1,41 @@
+
+function verificationstatus()
+{
+
+
+Var status = xrm.page.getAttribute(onl_status). getvalue ();
+ alert(status);
+If (status == "122050001")
+{
+ //alert(status);
+ReadOnly();
+}
+
+}
+
+
+
+
+function ReadOnly ()
+
+{
+
+    var controls = Xrm.Page.ui.controls.get();
+
+    for (var i in controls)
+
+    {
+
+        var control = controls[i];
+
+        if (!control.getDisabled())
+
+        {
+
+            control.setDisabled(true);
+
+        }
+
+    }
+
+}

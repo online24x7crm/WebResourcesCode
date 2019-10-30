@@ -1,0 +1,326 @@
+// JavaScript source code to show and hide LAN/WAN details on the basis of solution deployment
+function showHideTab() {
+    var SolutionDeploymentMode = Xrm.Page.getAttribute("onl_solutiondeploymentmodeonl").getValue();
+ if (SolutionDeploymentMode == 0){}
+else{
+    if (SolutionDeploymentMode == 122050000) {
+
+        Xrm.Page.ui.tabs.get("WL_WAN").setVisible(true);
+        Xrm.Page.ui.tabs.get("WL_WAN").sections.get("WL_WAN_section_3").setVisible(true);
+        Xrm.Page.ui.tabs.get("WL LAN").setVisible(true);
+        Xrm.Page.ui.tabs.get("WR WAN").setVisible(false);
+        Xrm.Page.ui.tabs.get("WR WAN").sections.get("tab_6_section_1").setVisible(false);
+        Xrm.Page.ui.tabs.get("WR LAN").setVisible(false);
+        Xrm.Page.ui.tabs.get("tab_6").setVisible(false);
+        Xrm.Page.ui.tabs.get("tab_7").setVisible(false);
+
+
+Xrm.Page.getAttribute("onl_online_noofwanlinks").setRequiredLevel("required");
+Xrm.Page.getAttribute("onl_wanntypeonl_d").setRequiredLevel("required");
+Xrm.Page.getAttribute("onl_wanntypeonl").setRequiredLevel("required");
+Xrm.Page.getAttribute("onl_wl_wannbandwidthmbps").setRequiredLevel("required");
+Xrm.Page.getAttribute("onl_online_wannipallocationtype").setRequiredLevel("required");
+Xrm.Page.getAttribute("onl_wl_wannipallocationtype").setRequiredLevel("required");
+Xrm.Page.getAttribute("onl_wannbbprovideronl_wl").setRequiredLevel("required");
+Xrm.Page.getAttribute("onl_wannbbproviderwld").setRequiredLevel("required");
+Xrm.Page.getAttribute("onl_wl_wancircuitid").setRequiredLevel("required");
+Xrm.Page.getAttribute("onl_online_wannbandwidthmbps").setRequiredLevel("required");
+Xrm.Page.getAttribute("onl_wl_wannipaddressspectracpewithmask").setRequiredLevel("required");
+Xrm.Page.getAttribute("onl_wl_wanngatewayspectracpewithmask").setRequiredLevel("required");
+Xrm.Page.getAttribute("onl_nooflanpoolsonl").setRequiredLevel("required");
+Xrm.Page.getAttribute("onl_wl_lannippool").setRequiredLevel("required");
+Xrm.Page.getAttribute("onl_wl_lannipaddressspectracpe").setRequiredLevel("required");
+Xrm.Page.getAttribute("onl_wl_lannippoolgateway").setRequiredLevel("required");
+Xrm.Page.getAttribute("onl_lannipallocationtousersonl").setRequiredLevel("required");
+Xrm.Page.getAttribute("onl_wl_lannipallocationrangeonincaseofdhcp").setRequiredLevel("required");
+
+// sol mode 03
+Xrm.Page.getAttribute("onl_rl_noofwanlinks").setRequiredLevel("none");
+Xrm.Page.getAttribute("onl_additionalippoolbetweenspectracpeandexist").setRequiredLevel("none");
+Xrm.Page.getAttribute("onl_rl_additionalippoolallocationtype").setRequiredLevel("none");
+Xrm.Page.getAttribute("onl_rl_additionalipconfiguredspectracpe").setRequiredLevel("none");
+Xrm.Page.getAttribute("onl_rl_additionalipgatewayspectracpe").setRequiredLevel("none");
+Xrm.Page.getAttribute("onl_rl_nooflanpools").setRequiredLevel("none");
+Xrm.Page.getAttribute("onl_lan1ippoolonl").setRequiredLevel("none");
+Xrm.Page.getAttribute("onl_rl_lan1ipaddressspectracpe").setRequiredLevel("none");
+Xrm.Page.getAttribute("onl_rl_lan1ippoolgateway").setRequiredLevel("none");
+Xrm.Page.getAttribute("onl_lan1ipallocationtousersonl").setRequiredLevel("none");
+Xrm.Page.getAttribute("onl_rl_lan1ipallocationrangeincaseofdhcp").setRequiredLevel("none");
+
+//sol mode 02
+Xrm.Page.getAttribute("onl_rr_noofwanlinks").setRequiredLevel("none");
+Xrm.Page.getAttribute("onl_lanipallocationtypebetweenspectracpeandex").setRequiredLevel("none");
+Xrm.Page.getAttribute("spectra_ippoolbetweenspectracpeandexistingl3devi1").setRequiredLevel("none");
+Xrm.Page.getAttribute("onl_rr_lanipconfiguredatspectracpe").setRequiredLevel("none");
+Xrm.Page.getAttribute("onl_rr_langatewayaddressatspectracpe").setRequiredLevel("none");
+Xrm.Page.getAttribute("onl_customerexistinglanpoolsonl_ol").setRequiredLevel("none");
+Xrm.Page.getAttribute("onl_rr_customerexistinglannippool").setRequiredLevel("none");
+Xrm.Page.getAttribute("onl_ipallocationtypebetweenspectracpeandexist").setRequiredLevel("none");
+Xrm.Page.getAttribute("onl_rrlanippoolbetweenspectracpeandexistingl3").setRequiredLevel("none");
+Xrm.Page.getAttribute("onl_ipconfiguredatspectracpeincaseofstaticonl").setRequiredLevel("none");
+Xrm.Page.getAttribute("onl_rrgatewayaddressatspectracpeincaseofstati").setRequiredLevel("none");
+
+//sol mode 01
+Xrm.Page.getAttribute("onl_wr_noofwanlinks").setRequiredLevel("none");
+Xrm.Page.getAttribute("onl_wanntypeonlwr").setRequiredLevel("none");
+Xrm.Page.getAttribute("onl_wannipallocationtypeonl").setRequiredLevel("none");
+Xrm.Page.getAttribute("onl_wannbbproviderwrs").setRequiredLevel("none");
+Xrm.Page.getAttribute("onl_wr_wannbandwidthmbps").setRequiredLevel("none");
+Xrm.Page.getAttribute("onl_wr_wannipaddressspectracpewithmask").setRequiredLevel("none");
+Xrm.Page.getAttribute("onl_wr_wanngatewayspectracpewithmask").setRequiredLevel("none");
+Xrm.Page.getAttribute("onl_wan2typeonl").setRequiredLevel("none");
+Xrm.Page.getAttribute("onl_wan2ipallocationtypeonl").setRequiredLevel("none");
+Xrm.Page.getAttribute("onl_wannbbproviderwrd").setRequiredLevel("none");
+Xrm.Page.getAttribute("onl_wr_wan2bandwidthmbps").setRequiredLevel("none");
+Xrm.Page.getAttribute("onl_rl_additionalippoolbetweenspectracpeandfw").setRequiredLevel("none");
+Xrm.Page.getAttribute("onl_additionalippoolallocationtypeonl").setRequiredLevel("none");
+Xrm.Page.getAttribute("onl_additionalipgatewayspectracpeonlyincase").setRequiredLevel("none");
+Xrm.Page.getAttribute("onl_additionalipconfiguredspectracpeonlyinca").setRequiredLevel("none");
+Xrm.Page.getAttribute("onl_customerexistinglanpoolsonl").setRequiredLevel("none");
+Xrm.Page.getAttribute("onl_wr_customerexistinglan1ippool").setRequiredLevel("none");
+Xrm.Page.getAttribute("onl_wr_customerexistinglan12ppool").setRequiredLevel("none");
+Xrm.Page.getAttribute("onl_wr_customerexistinglan13ppool").setRequiredLevel("none");
+Xrm.Page.getAttribute("onl_wr_customerexistinglan1nppool").setRequiredLevel("none");
+
+    }
+    else if (SolutionDeploymentMode == 122050001) {
+        Xrm.Page.ui.tabs.get("WR WAN").setVisible(true);
+        Xrm.Page.ui.tabs.get("WR WAN").sections.get("tab_6_section_1").setVisible(true);
+        Xrm.Page.ui.tabs.get("WR LAN").setVisible(true);
+        Xrm.Page.ui.tabs.get("WL_WAN").setVisible(false);
+        Xrm.Page.ui.tabs.get("WL_WAN").sections.get("WL_WAN_section_3").setVisible(false);
+        Xrm.Page.ui.tabs.get("WL LAN").setVisible(false);
+        Xrm.Page.ui.tabs.get("tab_6").setVisible(false);
+        Xrm.Page.ui.tabs.get("tab_7").setVisible(false);
+
+
+Xrm.Page.getAttribute("onl_wr_noofwanlinks").setRequiredLevel("required");
+Xrm.Page.getAttribute("onl_wanntypeonlwr").setRequiredLevel("required");
+Xrm.Page.getAttribute("onl_wannipallocationtypeonl").setRequiredLevel("required");
+Xrm.Page.getAttribute("onl_wannbbproviderwrs").setRequiredLevel("required");
+Xrm.Page.getAttribute("onl_wr_wannbandwidthmbps").setRequiredLevel("required");
+Xrm.Page.getAttribute("onl_wr_wannipaddressspectracpewithmask").setRequiredLevel("required");
+Xrm.Page.getAttribute("onl_wr_wanngatewayspectracpewithmask").setRequiredLevel("required");
+Xrm.Page.getAttribute("onl_wan2typeonl").setRequiredLevel("required");
+Xrm.Page.getAttribute("onl_wan2ipallocationtypeonl").setRequiredLevel("required");
+Xrm.Page.getAttribute("onl_wannbbproviderwrd").setRequiredLevel("required");
+Xrm.Page.getAttribute("onl_wr_wan2bandwidthmbps").setRequiredLevel("required");
+Xrm.Page.getAttribute("onl_rl_additionalippoolbetweenspectracpeandfw").setRequiredLevel("required");
+Xrm.Page.getAttribute("onl_additionalippoolallocationtypeonl").setRequiredLevel("required");
+Xrm.Page.getAttribute("onl_additionalipgatewayspectracpeonlyincase").setRequiredLevel("required");
+Xrm.Page.getAttribute("onl_additionalipconfiguredspectracpeonlyinca").setRequiredLevel("required");
+Xrm.Page.getAttribute("onl_customerexistinglanpoolsonl").setRequiredLevel("required");
+Xrm.Page.getAttribute("onl_wr_customerexistinglan1ippool").setRequiredLevel("required");
+Xrm.Page.getAttribute("onl_wr_customerexistinglan12ppool").setRequiredLevel("required");
+Xrm.Page.getAttribute("onl_wr_customerexistinglan13ppool").setRequiredLevel("required");
+Xrm.Page.getAttribute("onl_wr_customerexistinglan1nppool").setRequiredLevel("required");
+
+// sol mode 03
+Xrm.Page.getAttribute("onl_rl_noofwanlinks").setRequiredLevel("none");
+Xrm.Page.getAttribute("onl_additionalippoolbetweenspectracpeandexist").setRequiredLevel("none");
+Xrm.Page.getAttribute("onl_rl_additionalippoolallocationtype").setRequiredLevel("none");
+Xrm.Page.getAttribute("onl_rl_additionalipconfiguredspectracpe").setRequiredLevel("none");
+Xrm.Page.getAttribute("onl_rl_additionalipgatewayspectracpe").setRequiredLevel("none");
+Xrm.Page.getAttribute("onl_rl_nooflanpools").setRequiredLevel("none");
+Xrm.Page.getAttribute("onl_lan1ippoolonl").setRequiredLevel("none");
+Xrm.Page.getAttribute("onl_rl_lan1ipaddressspectracpe").setRequiredLevel("none");
+Xrm.Page.getAttribute("onl_rl_lan1ippoolgateway").setRequiredLevel("none");
+Xrm.Page.getAttribute("onl_lan1ipallocationtousersonl").setRequiredLevel("none");
+Xrm.Page.getAttribute("onl_rl_lan1ipallocationrangeincaseofdhcp").setRequiredLevel("none");
+
+//sol mode 02
+Xrm.Page.getAttribute("onl_rr_noofwanlinks").setRequiredLevel("none");
+Xrm.Page.getAttribute("onl_lanipallocationtypebetweenspectracpeandex").setRequiredLevel("none");
+Xrm.Page.getAttribute("spectra_ippoolbetweenspectracpeandexistingl3devi1").setRequiredLevel("none");
+Xrm.Page.getAttribute("onl_rr_lanipconfiguredatspectracpe").setRequiredLevel("none");
+Xrm.Page.getAttribute("onl_rr_langatewayaddressatspectracpe").setRequiredLevel("none");
+Xrm.Page.getAttribute("onl_customerexistinglanpoolsonl_ol").setRequiredLevel("none");
+Xrm.Page.getAttribute("onl_rr_customerexistinglannippool").setRequiredLevel("none");
+Xrm.Page.getAttribute("onl_ipallocationtypebetweenspectracpeandexist").setRequiredLevel("none");
+Xrm.Page.getAttribute("onl_rrlanippoolbetweenspectracpeandexistingl3").setRequiredLevel("none");
+Xrm.Page.getAttribute("onl_ipconfiguredatspectracpeincaseofstaticonl").setRequiredLevel("none");
+Xrm.Page.getAttribute("onl_rrgatewayaddressatspectracpeincaseofstati").setRequiredLevel("none");
+
+//sol mode 00
+Xrm.Page.getAttribute("onl_online_noofwanlinks").setRequiredLevel("none");
+Xrm.Page.getAttribute("onl_wanntypeonl_d").setRequiredLevel("none");
+Xrm.Page.getAttribute("onl_wanntypeonl").setRequiredLevel("none");
+Xrm.Page.getAttribute("onl_wl_wannbandwidthmbps").setRequiredLevel("none");
+Xrm.Page.getAttribute("onl_online_wannipallocationtype").setRequiredLevel("none");
+Xrm.Page.getAttribute("onl_wl_wannipallocationtype").setRequiredLevel("none");
+Xrm.Page.getAttribute("onl_wannbbprovideronl_wl").setRequiredLevel("none");
+Xrm.Page.getAttribute("onl_wannbbproviderwld").setRequiredLevel("none");
+Xrm.Page.getAttribute("onl_wl_wancircuitid").setRequiredLevel("none");
+Xrm.Page.getAttribute("onl_online_wannbandwidthmbps").setRequiredLevel("none");
+Xrm.Page.getAttribute("onl_wl_wannipaddressspectracpewithmask").setRequiredLevel("none");
+Xrm.Page.getAttribute("onl_wl_wanngatewayspectracpewithmask").setRequiredLevel("none");
+Xrm.Page.getAttribute("onl_nooflanpoolsonl").setRequiredLevel("none");
+Xrm.Page.getAttribute("onl_wl_lannippool").setRequiredLevel("none");
+Xrm.Page.getAttribute("onl_wl_lannipaddressspectracpe").setRequiredLevel("none");
+Xrm.Page.getAttribute("onl_wl_lannippoolgateway").setRequiredLevel("none");
+Xrm.Page.getAttribute("onl_lannipallocationtousersonl").setRequiredLevel("none");
+Xrm.Page.getAttribute("onl_wl_lannipallocationrangeonincaseofdhcp").setRequiredLevel("none");
+
+    }
+    else if (SolutionDeploymentMode == 122050002) {
+        Xrm.Page.ui.tabs.get("tab_7").setVisible(true);
+        Xrm.Page.ui.tabs.get("WR WAN").setVisible(false);
+        Xrm.Page.ui.tabs.get("WR WAN").sections.get("tab_6_section_1").setVisible(false);
+        Xrm.Page.ui.tabs.get("WR LAN").setVisible(false);
+        Xrm.Page.ui.tabs.get("WL_WAN").setVisible(false);
+        Xrm.Page.ui.tabs.get("WL_WAN").sections.get("WL_WAN_section_3").setVisible(false);
+        Xrm.Page.ui.tabs.get("WL LAN").setVisible(false);
+        Xrm.Page.ui.tabs.get("tab_6").setVisible(false);
+
+
+Xrm.Page.getAttribute("onl_rr_noofwanlinks").setRequiredLevel("required");
+Xrm.Page.getAttribute("onl_lanipallocationtypebetweenspectracpeandex").setRequiredLevel("required");
+Xrm.Page.getAttribute("spectra_ippoolbetweenspectracpeandexistingl3devi1").setRequiredLevel("required");
+Xrm.Page.getAttribute("onl_rr_lanipconfiguredatspectracpe").setRequiredLevel("required");
+Xrm.Page.getAttribute("onl_rr_langatewayaddressatspectracpe").setRequiredLevel("required");
+Xrm.Page.getAttribute("onl_customerexistinglanpoolsonl_ol").setRequiredLevel("required");
+Xrm.Page.getAttribute("onl_rr_customerexistinglannippool").setRequiredLevel("required");
+Xrm.Page.getAttribute("onl_ipallocationtypebetweenspectracpeandexist").setRequiredLevel("required");
+Xrm.Page.getAttribute("onl_rrlanippoolbetweenspectracpeandexistingl3").setRequiredLevel("required");
+Xrm.Page.getAttribute("onl_ipconfiguredatspectracpeincaseofstaticonl").setRequiredLevel("required");
+Xrm.Page.getAttribute("onl_rrgatewayaddressatspectracpeincaseofstati").setRequiredLevel("required");
+
+
+//sol mode 01
+Xrm.Page.getAttribute("onl_wr_noofwanlinks").setRequiredLevel("none");
+Xrm.Page.getAttribute("onl_wanntypeonlwr").setRequiredLevel("none");
+Xrm.Page.getAttribute("onl_wannipallocationtypeonl").setRequiredLevel("none");
+Xrm.Page.getAttribute("onl_wannbbproviderwrs").setRequiredLevel("none");
+Xrm.Page.getAttribute("onl_wr_wannbandwidthmbps").setRequiredLevel("none");
+Xrm.Page.getAttribute("onl_wr_wannipaddressspectracpewithmask").setRequiredLevel("none");
+Xrm.Page.getAttribute("onl_wr_wanngatewayspectracpewithmask").setRequiredLevel("none");
+Xrm.Page.getAttribute("onl_wan2typeonl").setRequiredLevel("none");
+Xrm.Page.getAttribute("onl_wan2ipallocationtypeonl").setRequiredLevel("none");
+Xrm.Page.getAttribute("onl_wannbbproviderwrd").setRequiredLevel("none");
+Xrm.Page.getAttribute("onl_wr_wan2bandwidthmbps").setRequiredLevel("none");
+Xrm.Page.getAttribute("onl_rl_additionalippoolbetweenspectracpeandfw").setRequiredLevel("none");
+Xrm.Page.getAttribute("onl_additionalippoolallocationtypeonl").setRequiredLevel("none");
+Xrm.Page.getAttribute("onl_additionalipgatewayspectracpeonlyincase").setRequiredLevel("none");
+Xrm.Page.getAttribute("onl_additionalipconfiguredspectracpeonlyinca").setRequiredLevel("none");
+Xrm.Page.getAttribute("onl_customerexistinglanpoolsonl").setRequiredLevel("none");
+Xrm.Page.getAttribute("onl_wr_customerexistinglan1ippool").setRequiredLevel("none");
+Xrm.Page.getAttribute("onl_wr_customerexistinglan12ppool").setRequiredLevel("none");
+Xrm.Page.getAttribute("onl_wr_customerexistinglan13ppool").setRequiredLevel("none");
+Xrm.Page.getAttribute("onl_wr_customerexistinglan1nppool").setRequiredLevel("none");
+
+//sol mode 00
+Xrm.Page.getAttribute("onl_online_noofwanlinks").setRequiredLevel("none");
+Xrm.Page.getAttribute("onl_wanntypeonl_d").setRequiredLevel("none");
+Xrm.Page.getAttribute("onl_wanntypeonl").setRequiredLevel("none");
+Xrm.Page.getAttribute("onl_wl_wannbandwidthmbps").setRequiredLevel("none");
+Xrm.Page.getAttribute("onl_online_wannipallocationtype").setRequiredLevel("none");
+Xrm.Page.getAttribute("onl_wl_wannipallocationtype").setRequiredLevel("none");
+Xrm.Page.getAttribute("onl_wannbbprovideronl_wl").setRequiredLevel("none");
+Xrm.Page.getAttribute("onl_wannbbproviderwld").setRequiredLevel("none");
+Xrm.Page.getAttribute("onl_wl_wancircuitid").setRequiredLevel("none");
+Xrm.Page.getAttribute("onl_online_wannbandwidthmbps").setRequiredLevel("none");
+Xrm.Page.getAttribute("onl_wl_wannipaddressspectracpewithmask").setRequiredLevel("none");
+Xrm.Page.getAttribute("onl_wl_wanngatewayspectracpewithmask").setRequiredLevel("none");
+Xrm.Page.getAttribute("onl_nooflanpoolsonl").setRequiredLevel("none");
+Xrm.Page.getAttribute("onl_wl_lannippool").setRequiredLevel("none");
+Xrm.Page.getAttribute("onl_wl_lannipaddressspectracpe").setRequiredLevel("none");
+Xrm.Page.getAttribute("onl_wl_lannippoolgateway").setRequiredLevel("none");
+Xrm.Page.getAttribute("onl_lannipallocationtousersonl").setRequiredLevel("none");
+Xrm.Page.getAttribute("onl_wl_lannipallocationrangeonincaseofdhcp").setRequiredLevel("none");
+
+// sol mode 03
+Xrm.Page.getAttribute("onl_rl_noofwanlinks").setRequiredLevel("none");
+Xrm.Page.getAttribute("onl_additionalippoolbetweenspectracpeandexist").setRequiredLevel("none");
+Xrm.Page.getAttribute("onl_rl_additionalippoolallocationtype").setRequiredLevel("none");
+Xrm.Page.getAttribute("onl_rl_additionalipconfiguredspectracpe").setRequiredLevel("none");
+Xrm.Page.getAttribute("onl_rl_additionalipgatewayspectracpe").setRequiredLevel("none");
+Xrm.Page.getAttribute("onl_rl_nooflanpools").setRequiredLevel("none");
+Xrm.Page.getAttribute("onl_lan1ippoolonl").setRequiredLevel("none");
+Xrm.Page.getAttribute("onl_rl_lan1ipaddressspectracpe").setRequiredLevel("none");
+Xrm.Page.getAttribute("onl_rl_lan1ippoolgateway").setRequiredLevel("none");
+Xrm.Page.getAttribute("onl_lan1ipallocationtousersonl").setRequiredLevel("none");
+Xrm.Page.getAttribute("onl_rl_lan1ipallocationrangeincaseofdhcp").setRequiredLevel("none");
+
+    }
+    else if (SolutionDeploymentMode == 122050003) {
+        Xrm.Page.ui.tabs.get("tab_6").setVisible(true);
+        Xrm.Page.ui.tabs.get("WL_WAN").setVisible(false);
+        Xrm.Page.ui.tabs.get("WL_WAN").sections.get("WL_WAN_section_3").setVisible(false);
+        Xrm.Page.ui.tabs.get("WL LAN").setVisible(false);
+        Xrm.Page.ui.tabs.get("WR WAN").setVisible(false);
+        Xrm.Page.ui.tabs.get("WR WAN").sections.get("tab_6_section_1").setVisible(false);
+        Xrm.Page.ui.tabs.get("WR LAN").setVisible(false);
+        Xrm.Page.ui.tabs.get("tab_7").setVisible(false);
+
+Xrm.Page.getAttribute("onl_rl_noofwanlinks").setRequiredLevel("required");
+Xrm.Page.getAttribute("onl_additionalippoolbetweenspectracpeandexist").setRequiredLevel("required");
+Xrm.Page.getAttribute("onl_rl_additionalippoolallocationtype").setRequiredLevel("required");
+Xrm.Page.getAttribute("onl_rl_additionalipconfiguredspectracpe").setRequiredLevel("required");
+Xrm.Page.getAttribute("onl_rl_additionalipgatewayspectracpe").setRequiredLevel("required");
+Xrm.Page.getAttribute("onl_rl_nooflanpools").setRequiredLevel("required");
+Xrm.Page.getAttribute("onl_lan1ippoolonl").setRequiredLevel("required");
+Xrm.Page.getAttribute("onl_rl_lan1ipaddressspectracpe").setRequiredLevel("required");
+Xrm.Page.getAttribute("onl_rl_lan1ippoolgateway").setRequiredLevel("required");
+Xrm.Page.getAttribute("onl_lan1ipallocationtousersonl").setRequiredLevel("required");
+Xrm.Page.getAttribute("onl_rl_lan1ipallocationrangeincaseofdhcp").setRequiredLevel("required");
+
+
+//sol mode 02
+Xrm.Page.getAttribute("onl_rr_noofwanlinks").setRequiredLevel("none");
+Xrm.Page.getAttribute("onl_lanipallocationtypebetweenspectracpeandex").setRequiredLevel("none");
+Xrm.Page.getAttribute("spectra_ippoolbetweenspectracpeandexistingl3devi1").setRequiredLevel("none");
+Xrm.Page.getAttribute("onl_rr_lanipconfiguredatspectracpe").setRequiredLevel("none");
+Xrm.Page.getAttribute("onl_rr_langatewayaddressatspectracpe").setRequiredLevel("none");
+Xrm.Page.getAttribute("onl_customerexistinglanpoolsonl_ol").setRequiredLevel("none");
+Xrm.Page.getAttribute("onl_rr_customerexistinglannippool").setRequiredLevel("none");
+Xrm.Page.getAttribute("onl_ipallocationtypebetweenspectracpeandexist").setRequiredLevel("none");
+Xrm.Page.getAttribute("onl_rrlanippoolbetweenspectracpeandexistingl3").setRequiredLevel("none");
+Xrm.Page.getAttribute("onl_ipconfiguredatspectracpeincaseofstaticonl").setRequiredLevel("none");
+Xrm.Page.getAttribute("onl_rrgatewayaddressatspectracpeincaseofstati").setRequiredLevel("none");
+
+//sol mode 01
+Xrm.Page.getAttribute("onl_wr_noofwanlinks").setRequiredLevel("none");
+Xrm.Page.getAttribute("onl_wanntypeonlwr").setRequiredLevel("none");
+Xrm.Page.getAttribute("onl_wannipallocationtypeonl").setRequiredLevel("none");
+Xrm.Page.getAttribute("onl_wannbbproviderwrs").setRequiredLevel("none");
+Xrm.Page.getAttribute("onl_wr_wannbandwidthmbps").setRequiredLevel("none");
+Xrm.Page.getAttribute("onl_wr_wannipaddressspectracpewithmask").setRequiredLevel("none");
+Xrm.Page.getAttribute("onl_wr_wanngatewayspectracpewithmask").setRequiredLevel("none");
+Xrm.Page.getAttribute("onl_wan2typeonl").setRequiredLevel("none");
+Xrm.Page.getAttribute("onl_wan2ipallocationtypeonl").setRequiredLevel("none");
+Xrm.Page.getAttribute("onl_wannbbproviderwrd").setRequiredLevel("none");
+Xrm.Page.getAttribute("onl_wr_wan2bandwidthmbps").setRequiredLevel("none");
+Xrm.Page.getAttribute("onl_rl_additionalippoolbetweenspectracpeandfw").setRequiredLevel("none");
+Xrm.Page.getAttribute("onl_additionalippoolallocationtypeonl").setRequiredLevel("none");
+Xrm.Page.getAttribute("onl_additionalipgatewayspectracpeonlyincase").setRequiredLevel("none");
+Xrm.Page.getAttribute("onl_additionalipconfiguredspectracpeonlyinca").setRequiredLevel("none");
+Xrm.Page.getAttribute("onl_customerexistinglanpoolsonl").setRequiredLevel("none");
+Xrm.Page.getAttribute("onl_wr_customerexistinglan1ippool").setRequiredLevel("none");
+Xrm.Page.getAttribute("onl_wr_customerexistinglan12ppool").setRequiredLevel("none");
+Xrm.Page.getAttribute("onl_wr_customerexistinglan13ppool").setRequiredLevel("none");
+Xrm.Page.getAttribute("onl_wr_customerexistinglan1nppool").setRequiredLevel("none");
+
+//sol mode 00
+Xrm.Page.getAttribute("onl_online_noofwanlinks").setRequiredLevel("none");
+Xrm.Page.getAttribute("onl_wanntypeonl_d").setRequiredLevel("none");
+Xrm.Page.getAttribute("onl_wanntypeonl").setRequiredLevel("none");
+Xrm.Page.getAttribute("onl_wl_wannbandwidthmbps").setRequiredLevel("none");
+Xrm.Page.getAttribute("onl_online_wannipallocationtype").setRequiredLevel("none");
+Xrm.Page.getAttribute("onl_wl_wannipallocationtype").setRequiredLevel("none");
+Xrm.Page.getAttribute("onl_wannbbprovideronl_wl").setRequiredLevel("none");
+Xrm.Page.getAttribute("onl_wannbbproviderwld").setRequiredLevel("none");
+Xrm.Page.getAttribute("onl_wl_wancircuitid").setRequiredLevel("none");
+Xrm.Page.getAttribute("onl_online_wannbandwidthmbps").setRequiredLevel("none");
+Xrm.Page.getAttribute("onl_wl_wannipaddressspectracpewithmask").setRequiredLevel("none");
+Xrm.Page.getAttribute("onl_wl_wanngatewayspectracpewithmask").setRequiredLevel("none");
+Xrm.Page.getAttribute("onl_nooflanpoolsonl").setRequiredLevel("none");
+Xrm.Page.getAttribute("onl_wl_lannippool").setRequiredLevel("none");
+Xrm.Page.getAttribute("onl_wl_lannipaddressspectracpe").setRequiredLevel("none");
+Xrm.Page.getAttribute("onl_wl_lannippoolgateway").setRequiredLevel("none");
+Xrm.Page.getAttribute("onl_lannipallocationtousersonl").setRequiredLevel("none");
+Xrm.Page.getAttribute("onl_wl_lannipallocationrangeonincaseofdhcp").setRequiredLevel("none");
+
+    }
+}
+}
+

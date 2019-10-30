@@ -1,0 +1,89 @@
+// JavaScript source code
+function showHideTab() {
+    var SolutionDeploymentMode = Xrm.Page.getAttribute("onl_solutiondeploymentmodeonl").getValue();
+ if (SolutionDeploymentMode == 0){}
+else{
+    if (SolutionDeploymentMode == 122050000) {
+
+        Xrm.Page.ui.tabs.get("WL_WAN Details").setVisible(true);
+        Xrm.Page.ui.tabs.get("WL_WAN Details").sections.get("WL_WAN Details_section_3").setVisible(true);
+        Xrm.Page.ui.tabs.get("WL- LAN Details").setVisible(true);
+        Xrm.Page.ui.tabs.get("WR- WAN Details").setVisible(false);
+        Xrm.Page.ui.tabs.get("WR- WAN Details").sections.get("WR- WAN Details_section_3").setVisible(false);
+        Xrm.Page.ui.tabs.get("WR- LAN Details").setVisible(false);
+        Xrm.Page.ui.tabs.get("RL Details").setVisible(false);
+        Xrm.Page.ui.tabs.get("RR Details").setVisible(false);
+
+    }
+    else if (SolutionDeploymentMode == 122050001) {
+        Xrm.Page.ui.tabs.get("WR- WAN Details").setVisible(true);
+        Xrm.Page.ui.tabs.get("WR- WAN Details").sections.get("WR- WAN Details_section_3").setVisible(true);
+        Xrm.Page.ui.tabs.get("WR- LAN Details").setVisible(true);
+        Xrm.Page.ui.tabs.get("WL_WAN Details").setVisible(false);
+        Xrm.Page.ui.tabs.get("WL_WAN Details").sections.get("WL_WAN Details_section_3").setVisible(false);
+        Xrm.Page.ui.tabs.get("WL- LAN Details").setVisible(false);
+        Xrm.Page.ui.tabs.get("RL Details").setVisible(false);
+        Xrm.Page.ui.tabs.get("RR Details").setVisible(false);
+
+
+    }
+    else if (SolutionDeploymentMode == 122050002) {
+        Xrm.Page.ui.tabs.get("RR Details").setVisible(true);
+        Xrm.Page.ui.tabs.get("WR- WAN Details").setVisible(false);
+        Xrm.Page.ui.tabs.get("WR- WAN Details").sections.get("WR- WAN Details_section_3").setVisible(false);
+        Xrm.Page.ui.tabs.get("WR- LAN Details").setVisible(false);
+        Xrm.Page.ui.tabs.get("WL_WAN Details").setVisible(false);
+        Xrm.Page.ui.tabs.get("WL_WAN Details").sections.get("WL_WAN Details_section_3").setVisible(false);
+        Xrm.Page.ui.tabs.get("WL- LAN Details").setVisible(false);
+        Xrm.Page.ui.tabs.get("RL Details").setVisible(false);
+
+    }
+    else if (SolutionDeploymentMode === 122050003) {
+        Xrm.Page.ui.tabs.get("RL Details").setVisible(true);
+        Xrm.Page.ui.tabs.get("WR- WAN Details").setVisible(false);
+        Xrm.Page.ui.tabs.get("WR- WAN Details").sections.get("WR- WAN Details_section_3").setVisible(false);
+        Xrm.Page.ui.tabs.get("WR- LAN Details").setVisible(false);
+        Xrm.Page.ui.tabs.get("WL_WAN Details").setVisible(false);
+        Xrm.Page.ui.tabs.get("WL_WAN Details").sections.get("WL_WAN Details_section_3").setVisible(false);
+        Xrm.Page.ui.tabs.get("WL- LAN Details").setVisible(false);
+        Xrm.Page.ui.tabs.get("RR Details").setVisible(false);
+
+    }
+}
+}
+
+//Saurabh Tripathi
+//29-sept-2019
+//status on hold
+function HideField()
+{
+ var status=Xrm.Page.getAttribute("onl_spectra_orderstatus").getValue();
+ if (status =="122050000")
+   {
+    Xrm.Page.getControl("spectra_reason").setVisible(false);
+    Xrm.Page.getControl("spectra_remarks").setVisible(false);
+     Xrm.Page.getControl("spectra_remarks").setRequiredLevel("none");
+     Xrm.Page.getControl("spectra_reason").setRequiredLevel("none");         
+
+    Xrm.Page.getControl("onl_spectra_cpeserialnumber").setRequiredLevel("required");
+    Xrm.Page.getControl("onl_spectra_cpetrackingnumber").setRequiredLevel("required");
+    Xrm.Page.getControl("onl_spectra_dispatcheddate").setRequiredLevel("required");         
+   }
+   else if (status =="122050003")
+   {
+    Xrm.Page.getControl("spectra_reason").setVisible(true);
+    Xrm.Page.getControl("spectra_remarks").setVisible(true);
+    Xrm.Page.getControl("spectra_remarks").setRequiredLevel("required");
+     Xrm.Page.getControl("spectra_reason").setRequiredLevel("required");         
+
+    Xrm.Page.getControl("onl_spectra_cpeserialnumber").setRequiredLevel("required");
+    Xrm.Page.getControl("onl_spectra_cpetrackingnumber").setRequiredLevel("required");
+    Xrm.Page.getControl("onl_spectra_dispatcheddate").setRequiredLevel("required");   
+   }
+    else{
+    Xrm.Page.getControl("spectra_reason").setVisible(false);
+    Xrm.Page.getControl("spectra_remarks").setVisible(false);
+    Xrm.Page.getControl("spectra_remarks").setRequiredLevel("none");
+     Xrm.Page.getControl("spectra_reason").setRequiredLevel("none");         
+	}
+}

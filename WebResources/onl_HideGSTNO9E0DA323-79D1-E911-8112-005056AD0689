@@ -1,0 +1,82 @@
+//show and Hied GST field on SAF form
+//modified by:Neha
+function HideFieldGst()
+{
+ var gstno=Xrm.Page.getAttribute("onl_gstno").getValue();
+
+
+if (gstno =="1")
+   {
+   
+	 Xrm.Page.getControl("onl_gstnumber").setVisible(true);
+	 Xrm.Page.getControl("onl_gstnumber").setRequiredLevel("required");         
+   }
+else{
+	Xrm.Page.getControl("onl_gstnumber").setVisible(false);
+        Xrm.Page.getControl("onl_gstnumber").setRequiredLevel("none");  
+	}
+
+}		
+
+// hide + button
+
+function hideplustwo() {
+
+    var gridPresales =  Xrm.Page.getControl("Presales_task");
+
+    if (gridPresales == null) {
+    setTimeout(" hideplustwo();", 2000);
+    return;
+      }
+      else{
+          var gridguidPresales = document.getElementById("Presales_task").control;
+          //alert(gridguidPresales.GetRecordsFromInnerGrid().length);
+          if (gridguidPresales.GetRecordsFromInnerGrid().length == 0 || gridguidPresales.GetRecordsFromInnerGrid().length >= 0 ) 
+          {
+              //alert("Hi");
+         document.getElementById("Presales_task_contextualButtonsContainer").style.display = "none";
+         //window.parent.document.getElementById("customerSite_contextualButtonsContainer").style.display = "none";
+          }
+      
+      }
+      var gridsite =  Xrm.Page.getControl("Customer_site");
+
+      if (gridsite == null) {
+      setTimeout(" hideplustwo();", 2000);
+      return;
+        }
+        else{
+            var gridguidsite = document.getElementById("Customer_site").control;
+            //alert(gridguidPresales.GetRecordsFromInnerGrid().length);
+            if (gridguidsite.GetRecordsFromInnerGrid().length == 0 || gridguidsite.GetRecordsFromInnerGrid().length >= 0 ) 
+            {
+                //alert("Hi");
+           document.getElementById("Customer_site_contextualButtonsContainer").style.display = "none";
+           //window.parent.document.getElementById("customerSite_contextualButtonsContainer").style.display = "none";
+            }
+        
+        }
+      
+    }
+
+function postalpin(){
+    var pin=Xrm.Page.getAttribute("onl_spectra_pincode").getValue();
+    var format = /^\(?([0-9]{6})$/;
+    if ((pin != "") && (pin != null)) {
+        if (!pin.match(format)) {
+            Xrm.Page.getAttribute("onl_spectra_pincode").setValue();
+            alert('Invalid Pin Code');
+            return;
+        }
+    }
+    var pin=Xrm.Page.getAttribute("onl_pincode").getValue();
+    var format = /^\(?([0-9]{6})$/;
+    if ((pin != "") && (pin != null)) {
+        if (!pin.match(format)) {
+            Xrm.Page.getAttribute("onl_pincode").setValue();
+            alert('Invalid Pin Code');
+            return;
+        }
+    }
+}
+

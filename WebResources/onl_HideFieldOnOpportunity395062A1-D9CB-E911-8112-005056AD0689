@@ -1,0 +1,44 @@
+//HideField according to SDWAN in Opportunity 
+//modified by neha
+
+function HideField()
+{
+
+	//debugger ;   
+	var lookupValue = new Array();
+	lookupValue =Xrm.Page.getAttribute("alletech_subbusinesssegment").getValue(); // Get SubBusiness segment get value through arrary
+
+	var SubBusinessSegment = lookupValue[0].name; // You need to replace the lookup field Name..
+
+
+	if (SubBusinessSegment == "SDWAN")
+	{
+
+
+	   Xrm.Page.getControl("spectra_rackrequired").setVisible(false);
+	    Xrm.Page.getControl("spectra_lastmileconnectivity").setVisible(false);
+	    Xrm.Page.getControl("alletech_lco").setVisible(false);
+	    Xrm.Page.getControl("alletech_media").setVisible(false);
+	    Xrm.Page.getControl("alletech_interfacerequiredfirstlevel").setVisible(false);
+	    Xrm.Page.getControl("alletech_interfacerequiredsecondlevel").setVisible(false);
+            Xrm.Page.getControl("alletech_voipportactivationcode").setVisible(false);
+
+			 
+	  
+	
+	}
+	else
+	{
+	   
+	   Xrm.Page.getControl("spectra_rackrequired").setVisible(true);
+	   Xrm.Page.getControl("spectra_lastmileconnectivity").setVisible(true);
+           Xrm.Page.getControl("alletech_lco").setVisible(true);
+           Xrm.Page.getControl("alletech_media").setVisible(true);
+           Xrm.Page.getControl("alletech_voipportactivationcode").setVisible(true);
+           Xrm.Page.getControl("alletech_interfacerequiredfirstlevel").setVisible(true);
+           Xrm.Page.getControl("alletech_interfacerequiredsecondlevel").setVisible(true);
+			 
+	
+	}
+
+}

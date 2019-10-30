@@ -1,0 +1,87 @@
+function onLoadOpp() {
+    debugger;
+alert("neha");
+alert(document.getElementById("opportunityproductsGrid_addImageButton"));
+AddButtonSubgrid();
+    $("#opportunityproductsGrid_addImageButtonImage").click(function (event) {
+        debugger;
+
+        var id = Xrm.Page.data.entity.getId().replace("{", "").replace("}", "");
+        var priceLevelId = Xrm.Page.getAttribute("onl_pricelist").getValue();
+
+        if (priceLevelId == null) {
+            alert("You must select a price list before attempting to add a product.");
+            setTimeout(function () {
+                document.getElementById("ProductGridFlyout_flyOut").style.display = "none";
+            }, 200);
+            return;
+        }
+        var customerSegmentCode = Xrm.Page.getAttribute("spectra_customersegmentcode").getValue();
+
+        if (customerSegmentCode == null) {
+            alert("Please select a customer segment before attempting to add a product.");
+
+            setTimeout(function () {
+                document.getElementById("ProductGridFlyout_flyOut").style.display = "none";
+            }, 200);
+            return;
+        }
+
+        var oppAttributes = Xrm.Page.data.entity.attributes.get();
+        if (oppAttributes != null) {
+            for (var i in oppAttributes) {
+                if (oppAttributes[i].getIsDirty()) {
+                    alert("Please Save the form and try again");
+                    setTimeout(function () {
+                        document.getElementById("ProductGridFlyout_flyOut").style.display = "none";
+                    }, 200);
+                    return;
+                }
+            }
+        }
+
+
+        var url = "WebResources/onl_AddExistingProductonSite";
+        var x = screen.width / 2 - 700 / 2;
+        var y = screen.height / 2 - 450 / 2;
+
+        myWindow = window.open(url, "_blank", 'height=485,width=700,left=' + x + ',top=' + y);
+
+
+       myWindow.onunload = function () {
+            //window.location.reload(true);
+            window.opener.location.reload();
+            Xrm.Page.ui.controls.get("opportunityproductsGrid").refresh();
+            var subgrid = Xrm.Page.ui.controls.get("opportunityproductsGrid");
+            subgrid.refresh();
+        } 
+
+        //myWindow.opener.parent.focus();
+
+        setTimeout(function () {
+            document.getElementById("ProductGridFlyout_flyOut").style.display = "none";
+        }, 200);
+    });
+}
+function AddButtonSubgrid() {
+
+alert("aaja");
+    // Get subgrid control
+    var subGridCtrl = Xrm.Page.getControl("opportunityproductsGrid");
+
+    alert(subGridCtrl);
+
+    // If subgrid is not loaded yet, then call same function after some time.
+    if (subGridCtrl == null) {
+        setTimeout("AddButtonSubgrid();", 2000);
+        return;
+    }
+
+    // Get the add button
+    var addButton = document.getElementById("opportunityproductsGrid_addImageButton");
+    var hideButton = document.getElementById("opportunityproductsGrid_openAssociatedGridViewImageButton");
+
+    // show the button
+    addButton.style.display = 'inline-block';
+    hideButton.style.display = 'none';
+}

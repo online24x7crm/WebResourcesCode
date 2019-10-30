@@ -1,0 +1,86 @@
+//Hide and Show condition for SDWAN on subbusinesssegment
+function SubBusinessSeg() {
+
+    var SubBusinessSegment =  Xrm.Page.getAttribute("alletech_subbusinesssegment").getValue(); // You need to replace the lookup field Name..
+    var lookupValue = new Array();
+    lookupValue=  Xrm.Page.getAttribute("alletech_subbusinesssegment").getValue(); 
+    if(lookupValue!=null)
+     {
+      var SubBusinessSegment =lookupValue[0].name;
+
+	if (SubBusinessSegment == "SDWAN") {
+
+             // Xrm.Page.getAttribute("onl_vertical").setVisible(true);
+             //Xrm.Page.getAttribute("onl_vertical").setRequiredLevel("required");
+
+ 
+
+		Xrm.Page.ui.tabs.get("questionaries").setVisible(false);
+		Xrm.Page.ui.tabs.get("Lead Questionnaries For SDWAN field").setVisible(true);
+               
+            Xrm.Page.getAttribute("spectra_nooflocation").setRequiredLevel("required");
+            Xrm.Page.getAttribute("spectra_iscustomerusingillservicesonl").setRequiredLevel("required");
+            Xrm.Page.getAttribute("spectra_plsmentionnumberoflinks").setRequiredLevel("required");
+            Xrm.Page.getAttribute("spectra_iscustomerusingbroadbandservicesonl").setRequiredLevel("required");
+            Xrm.Page.getAttribute("onl_aretheselinksbeingmanagedlinksonl").setRequiredLevel("required");
+            Xrm.Page.getAttribute("spectra_isthereanyredundancyformplsonl").setRequiredLevel("required");
+            
+            
+            Xrm.Page.getAttribute("spectra_whenisthemplscontracttoberenewed").setRequiredLevel("required");
+            Xrm.Page.getAttribute("spectra_iscustomerusinganyroutingservicesonl").setRequiredLevel("required");
+            Xrm.Page.getAttribute("spectra_isthereexistingmplsbackboneonl").setRequiredLevel("required");
+           
+            
+            Xrm.Page.getAttribute("onl_currentoperationalcities").setRequiredLevel("required");
+            Xrm.Page.getAttribute("onl_networksecurityservicesusedbycustomeronl").setRequiredLevel("required");
+            Xrm.Page.getAttribute("onl_wherearetheapplicationshosted").setRequiredLevel("required");
+            Xrm.Page.getAttribute("onl_itsupportforthecustomeronl").setRequiredLevel("required");
+           
+            
+
+	}
+	else
+	{
+             //  Xrm.Page.getAttribute("onl_vertical").setVisible(false);
+             //  Xrm.Page.getAttribute("onl_vertical").setRequiredLevel("none");
+
+
+
+
+		Xrm.Page.ui.tabs.get("questionaries").setVisible(false);
+		Xrm.Page.ui.tabs.get("Lead Questionnaries For SDWAN field").setVisible(false);
+		
+		    Xrm.Page.getAttribute("spectra_nooflocation").setRequiredLevel("none");
+            Xrm.Page.getAttribute("spectra_iscustomerusingillservicesonl").setRequiredLevel("none");
+            Xrm.Page.getAttribute("spectra_plsmentionnumberoflinks").setRequiredLevel("none");
+            Xrm.Page.getAttribute("spectra_iscustomerusingbroadbandservicesonl").setRequiredLevel("none");
+            Xrm.Page.getAttribute("onl_aretheselinksbeingmanagedlinksonl").setRequiredLevel("none");
+            Xrm.Page.getAttribute("spectra_isthereanyredundancyformplsonl").setRequiredLevel("none");
+            
+            Xrm.Page.getAttribute("spectra_whenisthemplscontracttoberenewed").setRequiredLevel("none");
+            Xrm.Page.getAttribute("spectra_iscustomerusinganyroutingservicesonl").setRequiredLevel("none");
+            Xrm.Page.getAttribute("spectra_isthereexistingmplsbackboneonl").setRequiredLevel("none");
+           
+            
+            Xrm.Page.getAttribute("onl_currentoperationalcities").setRequiredLevel("none");
+            Xrm.Page.getAttribute("onl_networksecurityservicesusedbycustomeronl").setRequiredLevel("none");
+            Xrm.Page.getAttribute("onl_wherearetheapplicationshosted").setRequiredLevel("none");
+            Xrm.Page.getAttribute("onl_itsupportforthecustomeronl").setRequiredLevel("none");
+           
+
+            
+	}
+    }
+
+}
+
+
+
+
+
+
+
+
+
+
+

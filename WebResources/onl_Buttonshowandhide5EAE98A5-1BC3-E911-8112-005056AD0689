@@ -1,0 +1,29 @@
+function showHideButton()
+{
+presalesTaskType = Xrm.Page.getAttribute(“new_type”);
+if (typeof (presalesTaskType) != “undefined” && presalesTaskType.getValue() != null)
+{
+if(presalesTaskType.getText()==”User”)
+{
+Xrm.Page.ui.buttons.get(“Submit for Approval”).setVisible(true);
+Xrm.Page.ui.buttons.get(“New”).setVisible(true);
+Xrm.Page.ui.buttons.get(“Save & Close”).setVisible(true);
+Xrm.Page.ui.buttons.get(“IVR Form”).setVisible(true);
+Xrm.Page.ui.buttons.get(“Delete”).setVisible(true);
+Xrm.Page.ui.buttons.get(“Approve”).setVisible(false);
+Xrm.Page.ui.buttons.get(“Reject”).setVisible(false);
+Xrm.Page.ui.buttons.get(“Save”).setVisible(true);
+}
+else if (PresalesTaskType.getText()==”SOC head”)
+{
+Xrm.Page.ui.buttons.get(“Approve”).setVisible(true);
+Xrm.Page.ui.buttons.get(“Reject”).setVisible(true);
+Xrm.Page.ui.buttons.get(“Submit for Approval”).setVisible(false);
+Xrm.Page.ui.buttons.get(“New”).setVisible(false);
+Xrm.Page.ui.buttons.get(“Save & Close”).setVisible(false);
+Xrm.Page.ui.buttons.get(“IVR Form”).setVisible(false);
+Xrm.Page.ui.buttons.get(“Delete”).setVisible(false);
+Xrm.Page.ui.buttons.get(“Save”).setVisible(false);
+}
+}
+}

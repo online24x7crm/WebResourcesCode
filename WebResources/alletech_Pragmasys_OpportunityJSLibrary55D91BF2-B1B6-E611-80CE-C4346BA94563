@@ -1,0 +1,439 @@
+function displayRuleForSpokeAddressSubgrid() {
+    debugger;
+    var entityName = Xrm.Page.data.entity.getEntityName();
+    var OpportunityId = Xrm.Page.data.entity.getId();
+    var formName = Xrm.Page.ui.formSelector.getCurrentItem().getLabel();
+
+    if (entityName == 'opportunity' && formName.toLowerCase() == 'business opportunity form') {
+        //var opportunityRequirement = Xrm.Page.getAttribute("alletech_opportunityrequirmentglb").getValue();
+
+        var prodSeg = Xrm.Page.getAttribute("alletech_productsegment").getValue();
+        var addressList = getInstallationAddress(prodSeg[0].name, OpportunityId);
+
+        if (addressList != null && addressList != undefined && addressList.length >= 1) {
+            return false;
+        }
+    }
+    else if (entityName == 'alletech_caf' && formName.toLowerCase() == 'caf - business new') {
+        return false;
+    }
+    return true;
+}
+function mandatorySpoke(context) {
+
+    debugger;
+    Xrm.Page.ui.clearFormNotification('1');
+    //var opptyreq = Xrm.Page.getAttribute("alletech_opportunityrequirmentglb").getValue();
+    var prodSeg = Xrm.Page.getAttribute("alletech_productsegment").getValue();
+
+    if (prodSeg != null) {
+        var saveEvt = context.getEventArgs();
+        var opptyId = Xrm.Page.data.entity.getId();
+        var installationAddress = getInstallationAddress(prodSeg[0].name, opptyId);
+
+        if (installationAddress != null && installationAddress != undefined && installationAddress.length == 0) {
+            Xrm.Page.ui.setFormNotification("Please add the Spokes Address", "WARNING", '1');
+            alert("Please add the Spokes Address");
+            saveEvt.preventDefault();
+        }
+    }
+}
+function getInstallationAddress(opportunityRequirement, OpportunityId) {
+    //debugger;	
+    var installationAddress;
+    //if (opportunityRequirement != null & opportunityRequirement != undefined & opportunityRequirement == 1) //P2P
+    if (opportunityRequirement != null && opportunityRequirement != undefined && (opportunityRequirement == "Metro Access Connect" || opportunityRequirement == "Carrier Access Connect")) {
+        var fetchxml = "<fetch version='1.0' output-format='xml-platform' mapping='logical' distinct='false'>" +
+            "<entity name='alletech_installationaddress'>" +
+            "<attribute name='alletech_installationaddressid' />" +
+            "<attribute name='alletech_name' />" +
+"<attribute name='alletech_buildingnamelookup' />" +
+            "<attribute name='createdon' />" +
+            "<order attribute='alletech_name' descending='false' />" +
+            "<filter type='and'>" +
+            "<condition attribute='alletech_opportunity' operator='eq'  uitype='opportunity' value='" + OpportunityId + "' />" +
+            "</filter>" +
+            "</entity>" +
+            "</fetch>";
+
+        installationAddress = XrmServiceToolkit.Soap.Fetch(fetchxml);
+    }
+    return installationAddress;
+}
+function getData(queryString) {
+    debugger;
+    var retrievedData;
+    var oDataEndpointUrl = Xrm.Page.context.getClientUrl() + "/XRMServices/2011/OrganizationData.svc/" + queryString;
+    console.info(Xrm.Page.context.getClientUrl() + "/XRMServices/2011/OrganizationData.svc/" + queryString);
+    $.ajax({
+        type: "GET",
+        async: false,
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        url: oDataEndpointUrl,
+        success: function (sucess) {
+            console.info(sucess);
+            retrievedData = sucess;
+        },
+        error: function (error) {
+            retrievedData = error;
+        }
+    });
+    return retrievedData;
+}
+
+function actionForCloseAsWon() {
+    
+var lookupValue = new Array();
+lookupValue =Xrm.Page.getAttribute("alletech_subbusinesssegment").getValue(); // Get SubBusiness segment get value through arrary
+var SubBusinessSegment = lookupValue[0].name; // You need to replace the lookup field Name..
+
+if(SubBusinessSegment=="SDWAN"){
+		SDWAN();
+
+ 
+		}
+		else{
+				InternetService();
+		}
+
+
+
+}
+
+function InternetService()
+{
+	var serverUrl = Xrm.Page.context.getClientUrl();
+    var formName = Xrm.Page.ui.formSelector.getCurrentItem().getLabel();
+    if (formName == "Home Opportunity Form") {
+        Mscrm.CommandBarActions.opportunityClose(true);
+        return;
+    }
+
+    //added by vasu 25/5/2018
+    //checking for spoke address
+    var prodSeg = Xrm.Page.getAttribute("alletech_productsegment").getValue();
+    var opptyId = Xrm.Page.data.entity.getId();
+    var installationAddress = getInstallationAddress(prodSeg[0].name, opptyId);
+
+    if (installationAddress != null && installationAddress != undefined && installationAddress.length == 0) {
+        alert("Please add Spokes Address");
+        return;
+    }
+
+    var cols = ["alletech_buildingstatus"];
+    var BuildingId = Xrm.Page.data.entity.attributes.get("alletech_buildingname").getValue()[0].id;
+    var building = XrmServiceToolkit.Soap.Retrieve("alletech_building", BuildingId, cols);
+    if (building.attributes["alletech_buildingstatus"] != undefined && building.attributes["alletech_buildingstatus"] != null) {
+
+        var buildingLookup = building.attributes["alletech_buildingstatus"].value;
+
+        if (buildingLookup != 1 && installationAddress != null && installationAddress.length > 0) {
+            //checking END B building value
+            var lookupRecordGuid = installationAddress[0].attributes["alletech_buildingnamelookup"].id;
+            var ENDBbuilding = XrmServiceToolkit.Soap.Retrieve("alletech_building", lookupRecordGuid, cols);
+            if (ENDBbuilding.attributes["alletech_buildingstatus"] != undefined && ENDBbuilding.attributes["alletech_buildingstatus"] != null) 
+                buildingLookup = ENDBbuilding.attributes["alletech_buildingstatus"].value;
+        }
+
+        if (buildingLookup == 1) {
+
+            var opportunityId = Xrm.Page.data.entity.getId();
+            var query = "/alletech_feasibilitySet" + "?$select=alletech_feasibilityidd&$filter=alletech_Opportunity/Id  eq guid'" + opportunityId + "' and alletech_RouteType eq false";
+            var totalFeasibility = getData(query);
+            query = "/alletech_feasibilitySet" + "?$select=alletech_feasibilityidd&$filter=alletech_Opportunity/Id  eq guid'" + opportunityId + "' and alletech_FeasiblityStatus/Value eq 1 and alletech_RouteType eq false";
+            var completedFeasibility = getData(query);
+
+            var btn = window.top.document.getElementById("opportunity|NoRelationship|Form|Mscrm.Form.opportunity.MarkAsWon");
+            var business_segment = Xrm.Page.getAttribute("alletech_businesssegmentglb").getValue();
+            if (business_segment != null) {
+                if (business_segment[0].name == "Business") {
+                    if (btn != null) {
+                        if (totalFeasibility != null && totalFeasibility != undefined && completedFeasibility != null && completedFeasibility != undefined) {
+                            //alert(totalFeasibility.d.results.length+"........."+completedFeasibility.d.results.length);
+if (totalFeasibility.d.results.length != completedFeasibility.d.results.length) {
+                                alert("Please Mark All Primary Feasibilities As Feasible");
+                                return;
+                            }
+                            if (totalFeasibility.d.results.length == 0 && completedFeasibility.d.results.length == 0) {
+                                alert("Please Generate Feasibility");
+                                return;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    Mscrm.CommandBarActions.opportunityClose(true);
+}
+
+
+
+function SDWAN()
+{
+
+	var lkupValue = new Array();
+	lkupValue =Xrm.Page.getAttribute("alletech_subbusinesssegment").getValue(); // Get SubBusiness segment get value through arrary
+	var SubBusinessSeg = lkupValue[0].name; // You need to replace the lookup field Name..
+	//alert(SubBusinessSeg);
+    
+	GetSubGridRows();
+		
+}
+
+function GetSubGridRows() {
+//alert('pk');
+		var grid = document.getElementById("CustomerSite").control;
+		//alert('CustomerSite'+grid.GetRecordsFromInnerGrid().length);
+		if (grid.GetRecordsFromInnerGrid().length == 0) {
+            alert('Fill minimum One records in CustomerSite');
+			return;
+        }
+		else
+		{     
+
+        if (document.getElementById("Presales_Task")) {
+        var grid2 = document.getElementById("Presales_Task").control;
+		//alert(grid2.GetRecordsFromInnerGrid().length);
+        
+		//alert(grid2.GetRecordsFromInnerGrid()[0][3].cells[3].outerText);
+
+			if (grid2.GetRecordsFromInnerGrid().length < 1) {
+						alert('Fill  One records in Presales_Task');
+						return;
+					}
+
+
+                if(grid2.GetRecordsFromInnerGrid()[0][3].cells[3].outerText == 'Approved')
+                {
+                    Mscrm.CommandBarActions.opportunityClose(true);
+                }
+                else
+                {
+                    alert('Pre Sales task not Approved');
+                    return;
+                }
+    }
+    else {
+        setTimeout("GetSubGridRows();", 2500);
+    }
+       
+	}
+}
+
+
+//------------------------------------------------------------------------------
+//Adding Filter on Building Name (Other Building Name to be added based on Area)
+//Implemetended on Lead,Caf,Survey
+function filterFunction(DependentField, TargetField) {
+    debugger;
+    if (Xrm.Page.getAttribute(DependentField).getValue() != null && Xrm.Page.getAttribute(DependentField).getValue() != undefined) {
+        var areaId = Xrm.Page.getAttribute(DependentField).getValue()[0].id;
+        var query = "/alletech_buildingSet" + "?$select=alletech_Area&$filter=startswith(alletech_name,'Other') and statuscode/Value eq 0 and alletech_Area/Id eq guid'" + areaId + "'";
+        var result = getData(query);
+        var fetchXml = "";
+        var filterXml = "";
+        if (result.d.results.length == 0) {
+            filterXml = "<filter type='or'>" +
+                "<condition attribute='alletech_name' operator='eq' value='Other' />" +
+                "<condition attribute='alletech_area' operator='eq' uiname='Aerocity' uitype='alletech_area' value='" + areaId + "' />" +
+                "</filter>";
+        }
+        else {
+            filterXml = "<condition attribute='alletech_area' operator='eq'  uitype='alletech_area' value='" + areaId + "' />";
+        }
+
+        fetchXml = "<fetch version='1.0' output-format='xml-platform' mapping='logical' distinct='false'>" +
+            "<entity name='alletech_building'>" +
+            "<attribute name='alletech_buildingid' />" +
+            "<attribute name='alletech_name' />" +
+            "<attribute name='createdon' />" +
+            "<order attribute='alletech_name' descending='false' />" +
+            "<filter type='and'>" +
+            filterXml +
+            "<condition attribute='statecode' operator='eq' value='0' />" +
+            "</filter>" +
+            "</entity>" +
+            "</fetch>";
+
+
+        //add the entity name
+        var entityName = "alletech_building";
+
+
+        // add the randomly generated GUID for the view id
+        var viewId = '{00000000-0000-0000-0000-000000000001}';
+
+        // add the view display name
+        var viewDisplayName = "Custom Building Lookup View";
+
+        var layoutXml = "<grid name='resultset' object='1' jump='alletech_name' select='1' icon='1' preview='1'>" +
+            "<row name='result' id='alletech_buildingid'>" +
+            "<cell name='alletech_name' width='250' />" +
+            "</row>" +
+            "</grid>";
+
+        // add the custom view for the lookup field
+        Xrm.Page.getControl(TargetField).addCustomView(viewId, entityName, viewDisplayName, fetchXml, layoutXml, true);
+    }
+}
+
+function filterArea(DependentField, TargetField) {
+    debugger;
+    if (Xrm.Page.getAttribute(DependentField).getValue() != null && Xrm.Page.getAttribute(DependentField).getValue() != undefined) {
+        var cityId = Xrm.Page.getAttribute(DependentField).getValue()[0].id;
+        var query = "/alletech_areaSet" + "?$select=alletech_name&$filter=startswith(alletech_name,'Other') and statuscode/Value eq 0 and alletech_city/Id eq guid'" + cityId + "'";
+        var result = getData(query);
+        var fetchXml = "";
+        var filterXml = "";
+        if (result.d.results.length == 0) {
+            filterXml = "<filter type='or'>" +
+                "<condition attribute='alletech_name' operator='eq' value='Other' />" +
+                "<condition attribute='alletech_city' operator='eq' value='" + cityId + "' />" +
+                "</filter>";
+        }
+        else {
+            filterXml = "<condition attribute='alletech_city' operator='eq' value='" + cityId + "' />";
+        }
+
+        fetchXml = "<fetch version='1.0' output-format='xml-platform' mapping='logical' distinct='false'>" +
+            "<entity name='alletech_area'>" +
+            "<attribute name='alletech_areaid' />" +
+            "<attribute name='alletech_name' />" +
+            "<order attribute='alletech_name' descending='false' />" +
+            "<filter type='and'>" +
+            filterXml +
+            "<condition attribute='statecode' operator='eq' value='0' />" +
+            "</filter>" +
+            "</entity>" +
+            "</fetch>";
+
+
+        //add the entity name
+        var entityName = "alletech_area";
+
+
+        // add the randomly generated GUID for the view id
+        var viewId = '{00000000-0000-0000-0000-000000000001}';
+
+        // add the view display name
+        var viewDisplayName = "Custom Area Lookup View";
+
+        var layoutXml = "<grid name='resultset' object='1' jump='alletech_name' select='1' icon='1' preview='1'>" +
+            "<row name='result' id='alletech_areaid'>" +
+            "<cell name='alletech_name' width='250' />" +
+            "</row>" +
+            "</grid>";
+
+        // add the custom view for the lookup field
+        Xrm.Page.getControl(TargetField).addCustomView(viewId, entityName, viewDisplayName, fetchXml, layoutXml, true);
+    }
+}
+//--------------------------------------------------------------------------------
+//Trigger Opportunity Approval Workflow on Submit Button
+function triggerWorkflow() {
+    debugger;
+    /* var isSubmit=Xrm.Page.getAttribute("pcl_issubmitted");
+     var isTotalAmount=Xrm.Page.getAttribute("pcl_totalamount").getValue();
+     if(isTotalAmount!=null && isTotalAmount!=0)
+     {
+         if(isSubmit.getValue()==false)
+         {
+             isSubmit.setValue(true);
+             Xrm.Page.data.entity.save();
+             Process.callWorkflow(OPPR_APPROVAL,
+             Xrm.Page.data.entity.getId(),
+             function () {
+   
+                 Xrm.Page.ui.setFormNotification("Opportunity Submitted for Approval", "INFO", "1");
+             },
+             function () {
+                 alert("Error approving the opportunity");
+             });	
+         }
+         else
+             Xrm.Page.ui.setFormNotification("Opportunity already Submitted for Approval", "INFO", "2");
+     }*/
+
+}
+
+//By OnlineTeam 20190920
+
+function HideFeasibilityBasedOnSDWAN()
+{
+        //alert('aji');
+	debugger ;   
+	var lookupValue = new Array();
+	lookupValue =Xrm.Page.getAttribute("alletech_subbusinesssegment").getValue(); // Get SubBusiness segment get value through arrary
+
+	var SubBusinessSegment = lookupValue[0].name; // You need to replace the lookup field Name..
+
+
+	if (SubBusinessSegment == "SDWAN")//SDWAN is taken to validate the look field of Get SubBusiness
+	{
+         // alert('hi');
+		Xrm.Page.ui.tabs.get("tab_10").setVisible(true);
+		Xrm.Page.ui.tabs.get("tab_11").setVisible(true);
+		Xrm.Page.ui.tabs.get("tab_12").setVisible(true);
+        Xrm.Page.ui.tabs.get("tab_9").setVisible(false);
+        Xrm.Page.ui.tabs.get("tab_6").setVisible(false); //tab_9  
+		Xrm.Page.ui.tabs.get("tab_Feasibility").setVisible(false);
+
+		//..........Field hide.........
+
+	    Xrm.Page.getControl("spectra_rackrequired").setVisible(false);
+	    Xrm.Page.getControl("spectra_lastmileconnectivity").setVisible(false);
+	    Xrm.Page.getControl("alletech_lco").setVisible(false);
+	    Xrm.Page.getControl("alletech_media").setVisible(false);
+	    Xrm.Page.getControl("alletech_interfacerequiredfirstlevel").setVisible(false);
+	    Xrm.Page.getControl("alletech_interfacerequiredsecondlevel").setVisible(false);
+	    Xrm.Page.getControl("alletech_voipportactivationcode").setVisible(false);
+        Xrm.Page.getControl("alletech_opportunityrequirmentglb").setVisible(false);
+
+
+                     Xrm.Page.getControl("onl_spectra_nooflocations").setRequiredLevel("required");
+			Xrm.Page.getControl("onl_wherearetheapplicationshostedonl").setRequiredLevel("required");
+			Xrm.Page.getControl("onl_iscustomerusingillservicesonl").setRequiredLevel("required");
+                 Xrm.Page.getControl("onl_aretheselinksbeingmanagedlinksonl").setRequiredLevel("required");
+			Xrm.Page.getControl("onl_iscustomerusingbroadbandservicesonl").setRequiredLevel("required");
+			Xrm.Page.getControl("onl_isthereexistingmplsbackboneonl").setRequiredLevel("required");
+            Xrm.Page.getControl("onl_spectra_currentoperationalcities").setRequiredLevel("required");
+			Xrm.Page.getControl("onl_spectra_plsmentionnumberoflinks").setRequiredLevel("required");
+			Xrm.Page.getControl("onl_networksecurityservicesusedbycustomeronl").setRequiredLevel("required");
+            Xrm.Page.getControl("onl_wherearetheapplicationshostedonl").setRequiredLevel("required");
+			Xrm.Page.getControl("onl_isthereanyredundancyformplsonl").setRequiredLevel("required");
+		    Xrm.Page.getControl("onl_itsupportforthecustomeronl").setRequiredLevel("required");
+
+		 Xrm.Page.getControl("onl_spectra_whenisthemplscontracttoberenewed").setRequiredLevel("required");
+		Xrm.Page.getControl("onl_iscustomerusinganyroutingservicesonl").setRequiredLevel("required");
+		                
+			
+
+	}
+	else
+	{
+        //alert('ji');
+	Xrm.Page.ui.tabs.get("tab_10").setVisible(false); //SiteDetails
+	Xrm.Page.ui.tabs.get("tab_11").setVisible(false); //Pre_sales
+	Xrm.Page.ui.tabs.get("tab_12").setVisible(false);//Lead for SDWAN
+    Xrm.Page.ui.tabs.get("tab_6").setVisible(true);//Product
+    Xrm.Page.ui.tabs.get("tab_9").setVisible(true);
+    Xrm.Page.ui.tabs.get("tab_Feasibility").setVisible(true);
+
+		//..........Field hide.........
+
+       Xrm.Page.getControl("spectra_rackrequired").setVisible(true);
+       Xrm.Page.getControl("spectra_lastmileconnectivity").setVisible(true);
+       Xrm.Page.getControl("alletech_lco").setVisible(true);
+       Xrm.Page.getControl("alletech_voipportactivationcode").setVisible(true);
+       Xrm.Page.getControl("alletech_media").setVisible(true);
+       Xrm.Page.getControl("alletech_interfacerequiredfirstlevel").setVisible(true);
+       Xrm.Page.getControl("alletech_interfacerequiredsecondlevel").setVisible(true);
+      Xrm.Page.getControl("alletech_opportunityrequirmentglb").setVisible(true);
+
+
+
+	}
+
+}

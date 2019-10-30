@@ -1,0 +1,33 @@
+//when ever the saf status is verificatio pending : then SAF submit date = 1220,50,001
+//when ever the saf status is installatio pending  : installain start date = 1220,50,003
+//when saf status is completed       : installing complete date.           = 1220,50,004
+//when ever the saf status order accepted by customer : happy browsing date. = 1112,60,002
+//when ever attch document status is approved then : document approved date. = 1
+
+
+
+//set the date of SAF Submit, Doc Approval, Instaling Complete and Order Accptance
+//Saurabh Tripathi
+//12-10-19
+function dateTime(){
+    var currentdate=new Date();
+    if(Xrm.Page.getAttribute("onl_status").getValue()== 122050001){
+		Xrm.Page.getAttribute("spectra_safsubmitdate").setValue(currentdate);
+		Xrm.Page.data.entity.save("save");
+    }
+     if(Xrm.Page.getAttribute("onl_status").getValue()== 122050003){
+		Xrm.Page.getAttribute("spectra_installingstartdate").setValue(currentdate);
+		Xrm.Page.data.entity.save("save");
+    }
+	if(Xrm.Page.getAttribute("onl_status").getValue()== 122050004){
+		Xrm.Page.getAttribute("spectra_installingcompletiondate").setValue(currentdate);
+		Xrm.Page.data.entity.save("save");
+    }
+    if(Xrm.Page.getAttribute("onl_status").getValue()==111260002){
+		Xrm.Page.getAttribute("spectra_happybrowsingdate").setValue(currentdate);
+		Xrm.Page.data.entity.save("save");
+    }
+     
+  
+    }
+	

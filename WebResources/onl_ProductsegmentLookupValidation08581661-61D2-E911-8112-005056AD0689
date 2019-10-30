@@ -1,0 +1,74 @@
+//Set value SDWAN in productsegment based on subbusinesssegment
+//modified by Neha
+
+function SetLookupField()
+{
+   debugger ;   
+    
+	var lookupValue = new Array();
+	lookupValue = Xrm.Page.getAttribute("alletech_subbusinesssegment").getValue(); // Get SubBusiness segment get value through arrary
+	var SubBusinessSegmentName = lookupValue[0].name; // You need to replace the lookup field Name..
+	var SubBusinessSegmentid = lookupValue[0].id;
+          var SubBusinessSegmententitytpe = lookupValue[0].entityType;
+          alert(SubBusinessSegmententitytpe);
+       if (SubBusinessSegmentName == "SDWAN")//{4360F71A-98B9-E911-8112-005056AD0689}sbs
+	    {
+            
+            var oppID = Xrm.Page.data.entity.getId();
+            var query1 = "onl_customersiteSet?$select=onl_Product&$filter=onl_OpportunityIdId/Id eq guid'" + oppID + "'";
+            var prodSeg = getData(query1);
+            if(prodSeg !="error"){    
+                var len = prodSeg.d.results.length;
+                var hub = 0;
+                for(var i=0; i<len; i++){
+                    if( prodSeg.d.results[i].onl_Product.Name != null ){
+                        hub++;
+                    }
+                }
+                alert("product is " + hub);
+                alert("product is " + len);
+            }
+            alert("go");
+            if(hub == len){
+                var lookUpData =new Array();
+                var value = new Array(); //create a new object array
+                value[0] = new Object();//
+                value[0].id = SubBusinessSegmentid ; // set ID to ID
+                value[0].name = SubBusinessSegmentName ; //set name to name
+                value[0].entityType =SubBusinessSegmententitytpe ; //optional
+                Xrm.Page.getAttribute("alletech_productsegment").setValue(value); //set the value.
+                // Xrm.Page.ui.tabs.get(" Tab_Quotes").setVisible(true);
+                Xrm.Page.ui.controls.get("alletech_productsegment").setDisabled(true);//{621706D9-CB94-E411-9411-842B2BA0F44F}=ps
+                alert("pro");
+            }
+            else
+                Xrm.Page.getAttribute("alletech_productsegment").setValue(null); //set the value.
+	    } 
+    else{
+        Xrm.Page.ui.controls.get("alletech_productsegment").setDisabled(false);
+    }
+}
+
+  function getData(queryString) {
+    debugger;
+    var retrievedData;
+    var oDataEndpointUrl = Xrm.Page.context.getClientUrl() + "/XRMServices/2011/OrganizationData.svc/" + queryString;// var oDataEndpointUrl = "https://snetdev.spectranet.in/XRMServices/2011/OrganizationData.svc/" + queryString;
+    console.info(Xrm.Page.context.getClientUrl() + "/XRMServices/2011/OrganizationData.svc/" + queryString);
+    $.ajax({
+        type: "GET",
+        async: false,
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        url: oDataEndpointUrl,
+        success: function (sucess) {
+            console.info(sucess);
+            retrievedData = sucess;
+        },
+        error: function (error) {
+            retrievedData = "error";
+        }
+    });
+    return retrievedData;
+  }
+
+///XRMServices/2011/OrganizationData.svc/onl_customersiteSet?$select=onl_Product&$filter=onl_OpportunityIdId/Id eq guid'4f12717b-19cb-e911-8112-005056ad0689'

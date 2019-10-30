@@ -1,0 +1,39 @@
+function showHideTabSection() {
+    var SolutionDeploymentMode = Xrm.Page.getAttribute("onl_solutiondeploymentmodeonl").getValue();
+ 
+    if (SolutionDeploymentMode == 122050000)//WL 
+	{
+        Xrm.Page.ui.tabs.get("tab_12").sections.get("tab_12_section_1").setVisible(true);
+	    Xrm.Page.ui.tabs.get("tab_12").sections.get("tab_12_section_2").setVisible(false);
+		Xrm.Page.ui.tabs.get("tab_12").sections.get("tab_12_section_3").setVisible(false);
+	    Xrm.Page.ui.tabs.get("tab_12").sections.get("tab_12_section_4").setVisible(false);
+	    Xrm.Page.ui.tabs.get("tab_12").sections.get("tab_12_section_1").setVisible(false);
+      else
+	  if(SolutionDeploymentMode == 122050001)//WR
+	  {
+	    Xrm.Page.ui.tabs.get("tab_12").sections.get("tab_12_section_1").setVisible(false);
+	    Xrm.Page.ui.tabs.get("tab_12").sections.get("tab_12_section_2").setVisible(true);
+		Xrm.Page.ui.tabs.get("tab_12").sections.get("tab_12_section_3").setVisible(false);
+	    Xrm.Page.ui.tabs.get("tab_12").sections.get("tab_12_section_4").setVisible(false);
+	    Xrm.Page.ui.tabs.get("tab_12").sections.get("tab_12_section_1").setVisible(false);
+	    
+	  }
+	  else if(SolutionDeploymentMode == 122050002)//RR
+	  {
+	    Xrm.Page.ui.tabs.get("tab_12").sections.get("tab_12_section_1").setVisible(false);
+	    Xrm.Page.ui.tabs.get("tab_12").sections.get("tab_12_section_2").setVisible(false);
+		Xrm.Page.ui.tabs.get("tab_12").sections.get("tab_12_section_3").setVisible(false);
+	    Xrm.Page.ui.tabs.get("tab_12").sections.get("tab_12_section_4").setVisible(true);
+	    Xrm.Page.ui.tabs.get("tab_12").sections.get("tab_12_section_1").setVisible(false);
+	    
+	  }
+	  else if(SolutionDeploymentMode == 122050003)//RL
+	  {
+	    Xrm.Page.ui.tabs.get("tab_12").sections.get("tab_12_section_1").setVisible(false);
+	    Xrm.Page.ui.tabs.get("tab_12").sections.get("tab_12_section_2").setVisible(false);
+		Xrm.Page.ui.tabs.get("tab_12").sections.get("tab_12_section_3").setVisible(true);
+	    Xrm.Page.ui.tabs.get("tab_12").sections.get("tab_12_section_4").setVisible(false);
+	    Xrm.Page.ui.tabs.get("tab_12").sections.get("tab_12_section_1").setVisible(false);
+	  }
+	  }
+}

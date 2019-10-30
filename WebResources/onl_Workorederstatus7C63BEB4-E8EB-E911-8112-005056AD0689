@@ -1,0 +1,21 @@
+//validation for order accepted by customer
+
+function orderStatus() {
+
+var status =  Xrm.Page.getAttribute("spectra_serviceactivationflag").getValue();
+
+if(status == 1) {
+
+  Xrm.Page.getControl("spectra_acceptedbycustomerdate").setVisible(true);
+
+  
+
+}
+
+else{
+  Xrm.Page.getControl("spectra_acceptedbycustomerdate").setVisible(false);
+
+  
+	
+}
+}

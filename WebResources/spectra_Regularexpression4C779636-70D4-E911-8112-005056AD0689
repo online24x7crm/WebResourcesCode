@@ -1,0 +1,147 @@
+//Apply Regular Expression on field to valid IP 
+function IpAddressWanCPE()
+{
+   validipaddress("onl_wl_wannipaddressspectracpewithmask");
+//field schema name
+}
+
+function ipwangatewaycpe()
+{
+validipaddress("onl_wl_wanngatewayspectracpewithmask");
+}
+
+function AdditionIPGatewayCPE()
+{
+validipaddress("onl_additionalipgatewayspectracpeonlyincase");
+}
+
+function CustomerExitinglan1()
+{
+validipaddress("onl_wr_customerexistinglan1ippool");
+}
+function CustomerExistingLanN()
+{
+validipaddress("onl_wr_customerexistingplan1nppool");
+}
+
+function CustomerExistingLan3()
+{
+validipaddress("onl_wr_customerexistinglan13ppool");
+}
+
+
+
+function CustomerExistLan2()
+{
+validipaddress("onl_wr_customerexistinglan12ppool");
+}
+
+
+function AdditionConfigCPE()
+{
+validipaddress("onl_additionalipconfiguredspectracpeonlyinca");
+}
+
+
+function WANGatewayCPE()
+{
+validipaddress("onl_wr_wanngatewayspectracpewithmask");
+}
+
+
+function IPWlPool()
+{
+validipaddress("onl_wl_lannippool");
+}
+function IPWlPoolgateway()
+{
+validipaddress("onl_wl_lannippoolgateway");
+}
+
+
+function  ipAddressLanCPE()
+{
+  validipaddress("onl_wl_lannipaddressspectracpe");
+}
+
+
+function WRStaticipAddress()
+{
+ validipaddress("onl_wr_wannipaddressspectracpewithmask");
+}
+
+function RLLANIpAddress()
+{
+validipaddress("onl_rl_lan1ipaddressspectracpe");
+}
+
+function CustomerLan1nPool()
+{
+validipaddress("onl_wr_customerexistinglan1nppool");
+}
+
+
+function CustomerLan1nnPool()
+{
+validipaddress("onl_wr_customerexistinglan13ppool");
+}
+
+
+function AddtionalIPPoolCPE()
+{
+validipaddress("onl_additionalippoolbetweenspectracpeandexist");
+}
+function LanIppoolgateway()
+{
+validipaddress("onl_rl_lan1ippoolgateway");  
+
+}
+function Addtionalipgatewaycpe()
+{
+validipaddress("onl_rl_additionalipgatewayspectracpe");
+}
+function CustomerExistingLANIPPool()
+{
+validipaddress("onl_rr_customerexistinglannippool");
+}
+function LANGatewayAddressatSpectraCPE()
+{
+validipaddress("onl_rr_langatewayaddressatspectracpe");
+}
+function LANipconfiguredatspectracpe()
+{
+validipaddress("onl_rr_lanipconfiguredatspectracpe");
+
+}
+function Lanippoolbetweenspectracpeandexistingl3()
+{
+validipaddress("onl_rrlanippoolbetweenspectracpeandexistingl3");
+
+}
+function IPPoolbetweenSpectraCPEandExistingL3Device()
+{
+validipaddress("spectra_ippoolbetweenspectracpeandexistingl3devi1");
+
+
+}
+
+function LAN1IPallocationRange()//onl_rl_lan1ipallocationrangeincaseofdhcp
+{
+validipaddress("onl_rl_lan1ipallocationrangeincaseofdhcp");
+
+}
+
+function validipaddress(fieldName) {
+  var ipaddress = Xrm.Page.data.entity.attributes.get(fieldName).getValue();
+    var ipformat = /^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;
+
+    if ((ipaddress != "") && (ipaddress != null)) {
+        if (!ipaddress.match(ipformat)) {
+        alert('Please enter IP Address in correct format (127.255.255.255)');
+            //Xrm.Utility.alertDialog(" Please enter IP Address and correct format(127.255.255.255)", null)
+         //   ipaddress = "000.000.000.000";
+            Xrm.Page.data.entity.attributes.get(fieldName).setValue("");
+        }
+    }
+	}
+	

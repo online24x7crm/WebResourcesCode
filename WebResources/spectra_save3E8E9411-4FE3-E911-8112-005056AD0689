@@ -1,0 +1,10 @@
+//function for status change on SAF for Workflow
+function flag(){
+    debugger;
+    if(Xrm.Page.getAttribute("onl_sitetype").getValue()==122050002)
+        if(Xrm.Page.getAttribute("onl_runsubmitworkflowonl").getValue())    
+            Xrm.Page.getAttribute("onl_runsubmitworkflowonl").setValue(0);
+        else
+            Xrm.Page.getAttribute("onl_runsubmitworkflowonl").setValue(1);
+            
+}

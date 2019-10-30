@@ -1,0 +1,61 @@
+//Alert on Qualify button for Lead
+//modified by :online24x7
+function QualifybuttonHideShow() {
+   debugger;
+   var valID =Xrm.Page.getAttribute("pcl_flrstatus").getValue();
+   if (valID != null || valID != 'undefined' || valID !='')  
+   
+   {
+		var FLRStatus = Xrm.Page.getAttribute("pcl_flrstatus").getValue();
+		var Qualify = top.document.getElementById("lead|NoRelationship|Form|Mscrm.Form.lead.ConvertQuick");
+			if(FLRStatus!= null)
+			{
+			if(FLRStatus == 1)
+			{
+				Qualify.click();
+				 Qualify.style.display = "block";
+
+                                window.opener.location.reload();	
+			}
+			else
+			{
+				 Qualify.style.display = "none";
+			}
+			
+			  
+			}
+   
+   }
+   
+    
+	 HideShowQuestionaries_leadQuestionariesab();
+	
+
+}
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+function HideShowQuestionaries_leadQuestionariesab()
+{
+var SubBusinessSegment =  Xrm.Page.getAttribute("alletech_subbusinesssegment").getValue(); // You need to replace the lookup field Name..
+    var lookupValue = new Array();
+    lookupValue=  Xrm.Page.getAttribute("alletech_subbusinesssegment").getValue(); 
+   
+    var SubBusinessSegment =lookupValue[0].name;
+	if (SubBusinessSegment == "SDWAN") //Check lookup value based on flr Status questionaries & lead for sdwan false _ true based on condition
+	{
+		Xrm.Page.ui.tabs.get("questionaries").setVisible(false);
+		Xrm.Page.ui.tabs.get("Lead Questionnaries For SDWAN field").setVisible(true);
+	}
+	else
+	{
+		Xrm.Page.ui.tabs.get("questionaries").setVisible(true);
+		Xrm.Page.ui.tabs.get("Lead Questionnaries For SDWAN field").setVisible(false);
+
+	}
+
+
+}
+
+

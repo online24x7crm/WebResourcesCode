@@ -1,0 +1,664 @@
+function OnLoad_Opportunity_check_Product_Selected() {
+  debugger;
+  try {
+      var BusinessSegment = new Array;
+      BusinessSegment = Xrm.Page.getAttribute("alletech_businesssegmentglb").getValue();
+      var BussName = BusinessSegment[0].name;
+      if (BussName.toLowerCase() == "business") {
+          var Product = new Array;
+          Product = Xrm.Page.getAttribute("alletech_product").getValue();
+
+          if (Product != null) {
+              Xrm.Page.ui.tabs.get("tab_Details").sections.get("Sec_InstallationAddress_grid").setVisible(true);
+              Xrm.Page.ui.tabs.get("tab_Feasibility").setVisible(true);
+              Xrm.Page.ui.tabs.get("Tab_Quotes").setVisible(true);
+              //setTimeout("disable_GetFeasibilitybutton("+'inline - block'+");", 1500);
+          }
+          else {
+              Xrm.Page.ui.tabs.get("tab_Details").sections.get("Sec_InstallationAddress_grid").setVisible(false);
+              Xrm.Page.ui.tabs.get("tab_Feasibility").setVisible(false);
+              Xrm.Page.ui.tabs.get("Tab_Quotes").setVisible(false);
+              // setTimeout("disable_GetFeasibilitybutton("+'none'+");", 1500);
+          }
+          Area();
+          building();
+
+      }
+  } catch (ex) { }
+}
+function checkDate() {
+  var instdate = Xrm.Page.getAttribute("spectra_expectedinstallationdate").getValue();
+  var today = new Date();
+  today.setHours(0, 0, 0, 0);
+  if (instdate <= today) {
+      alert("Expected Installation date cannot be past date  or current date, please select only future date.");
+      Xrm.Page.getAttribute("spectra_expectedinstallationdate").setValue(null);
+  }
+}
+function setLastMileConnectivity() {
+  debugger;
+
+  var url = Xrm.Page.context.getClientUrl();
+ // var building = Xrm.Page.getAttribute("alletech_buildingname").getValue()[0];
+
+  var lookupValue = new Array();
+  lookupValue=  Xrm.Page.getAttribute("alletech_buildingname").getValue(); 
+
+ if(lookupValue !=null)
+{
+ 
+  var building =lookupValue[0];
+
+
+
+  url = url + "/xrmservices/2011/organizationdata.svc/alletech_buildingSet(guid'" + building.id + "')/?$select=alletech_BuildingStatus";
+
+  var d = Common.callAjax(url, "GET", false);
+  if (d.alletech_BuildingStatus.Value == 1) {
+      Xrm.Page.getAttribute("spectra_lastmileconnectivity").setValue(111260001);
+      Xrm.Page.getAttribute("spectra_lastmileconnectivity").setSubmitMode("always");
+      Xrm.Page.data.entity.save();
+  }
+ else if (d.alletech_BuildingStatus.Value == 8 || d.alletech_BuildingStatus.Value == 9) {
+      Xrm.Page.getAttribute("spectra_lastmileconnectivity").setValue(111260002);
+      Xrm.Page.getAttribute("spectra_lastmileconnectivity").setSubmitMode("always");
+      Xrm.Page.data.entity.save();
+  }
+  else {
+      Xrm.Page.getAttribute("spectra_lastmileconnectivity").setValue(111260000);
+      Xrm.Page.getAttribute("spectra_lastmileconnectivity").setSubmitMode("always");
+      Xrm.Page.data.entity.save();
+  }
+}
+}
+function showhidefeasibility() {
+  debugger;
+  var url = Xrm.Page.context.getClientUrl();
+  var building = Xrm.Page.getAttribute("alletech_buildingname").getValue()[0];
+
+  url = url + "/xrmservices/2011/organizationdata.svc/alletech_buildingSet(guid'" + building.id + "')/?$select=alletech_BuildingStatus";
+
+  var d = Common.callAjax(url, "GET", false);
+  var show = true;
+
+  var BusinessSegment = new Array;
+  BusinessSegment = Xrm.Page.getAttribute("alletech_businesssegmentglb").getValue();
+  var BussName = BusinessSegment[0].name;
+  if (BussName.toLowerCase() == "business") {
+      var Product = new Array;
+      Product = Xrm.Page.getAttribute("alletech_product").getValue();
+
+      if (Product != null) {
+
+          //code added by vasu for BBB
+          if (Xrm.Page.getAttribute("alletech_productsegment") != null && Xrm.Page.getAttribute("alletech_productsegment").getValue() != null) {
+              var prodSeg = Xrm.Page.getAttribute("alletech_productsegment").getValue();
+
+              if (prodSeg[0].name == "BBB") {
+                 // Xrm.Page.ui.tabs.get("Tab_Quotes").setVisible(false);
+                  Xrm.Page.ui.tabs.get("tab_Feasibility").setVisible(false);
+                  return false;
+              }
+          }
+
+          if (d.alletech_BuildingStatus.Value == 1) {
+              show = true;
+          }
+          else {
+              show = false;
+          }
+      }
+      else {
+          show = false;
+      }
+  }
+//    hideAddButtonSubgrid("opportunityproductsGrid");
+  return show;
+}
+
+
+function disable_GetFeasibilitybutton(DisplayProperty) {
+  var reject = top.document.getElementById("opportunity|NoRelationship|Form|alletech.opportunity.Button1.Button");
+  if (reject != null || reject != undefined) {
+      reject.style.display = DisplayProperty;
+  }
+  else {
+      setTimeout("disable_GetFeasibilitybutton();", 1500);
+  }
+}
+//-------------------------------------------------
+function Generate_Feasibility() {
+  debugger;
+  try {
+      var status = Xrm.Page.getAttribute("alletech_feasibilityrequired").getValue();
+      if (!status) {
+          Xrm.Page.getAttribute("alletech_feasibilityrequired").setValue(true);
+          Xrm.Page.data.entity.save();
+          Xrm.Page.ui.setFormNotification('Feasibility Generated For Opportunity ', 'INFORMATION');
+      }
+      else {
+          Xrm.Page.ui.setFormNotification('Feasibility Already Generated For this Opportunity ', 'INFORMATION');
+      }
+  }
+  catch (e) { }
+}
+
+
+function RetrieveSubGridRecords() {
+  debugger;
+  if (document.getElementById("opportunityproductsGrid")) {
+      var grid = document.getElementById("opportunityproductsGrid").control;
+      if (grid.GetRecordsFromInnerGrid().length >= 1) {
+          document.getElementById("opportunityproductsGrid_contextualButtonsContainer").style.display = "none";
+      }
+      else {
+          document.getElementById("opportunityproductsGrid_contextualButtonsContainer").style.display = "block";
+      }
+  }
+  else {
+      setTimeout("RetrieveSubGridRecords();", 2500);
+  }
+}
+function AddEventToGridRefresh() {
+  debugger;
+  // retrieve the subgrid
+  var grid = document.getElementById("opportunityproductsGrid");
+  // if the subgrid still not available we try again after 1 second
+  if (grid == null) {
+      setTimeout(function () { AddEventToGridRefresh(); }, 1000);
+      return;
+  }
+  else
+      RetrieveSubGridRecords();
+  // add the function to the onRefresh event
+  grid.control.add_onRefresh(RetrieveSubGridRecords);
+  grid.refresh();
+}
+//-------------------------------------------------
+
+function Get_Record_Data_ID() {
+  debugger;
+  var product = Xrm.Page.getAttribute("pricelevelid").getValue();
+  if (product == null) {
+      var lookup = new Array();
+      lookup = Xrm.Page.getAttribute("ownerid").getValue();
+      if (lookup != null) {
+          var name = lookup[0].name;
+          var id = lookup[0].id;
+          var entityType = lookup[0].entityType;
+          var GUID = id;
+          var Entity_name = "SystemUser";
+          GetSpecificEntityData(Entity_name, GUID);
+      }
+  }
+}
+
+function GetSpecificEntityData(EntityName, RecordGuid) {
+  debugger;
+  var Initial_Dynamic_Url = Xrm.Page.context.getClientUrl();
+  var Fixed_Middle_Url = "/XRMServices/2011/OrganizationData.svc/";
+  //var Url_Endpoint = EntityName + "Set(guid'" + RecordGuid + "')";
+  var Url_Endpoint = EntityName + "Set?$filter=" + EntityName + "Id eq guid'" + RecordGuid + "'";
+  var oData_url = Initial_Dynamic_Url + Fixed_Middle_Url + Url_Endpoint;
+  ajax_GetSpecificDatafunction_get(oData_url, EntityName);
+}
+
+function ajax_GetSpecificDatafunction_get(odata, EntityName) {
+
+  debugger;
+  $.ajax({
+      type: "GET",
+      contentType: "application/json; charset=utf-8",
+      datatype: "json",
+      url: odata,
+      async: false,
+      beforeSend: function (XMLHttpRequest) { XMLHttpRequest.setRequestHeader("Accept", "application/json"); },
+      success: function (data, textStatus, XmlHttpRequest) {
+          ProcessReturnedEntity_get(data.d, EntityName);
+
+      },
+      error: function (xmlHttpRequest, textStatus, errorThrown) {
+          alert("Status: " + textStatus + "; ErrorThrown: " + errorThrown);
+      }
+  });
+}
+function ProcessReturnedEntity_get(outputfromodata, EntityName) {
+  debugger;
+  var output = outputfromodata.results[0];
+  var Operatingcity = SetXML_Lookup(output.alletech_OperatingCity);
+
+  var BusinessSegment = SetXML_Lookup(output.alletech_BusinessSegment);
+  var SubBusinessSegment = SetXML_Lookup(output.alletech_SubBusinessSegment);
+
+
+  //PriceList_order(Operatingcity);
+  //addEventHandler(Operatingcity);
+  addCities_In_Pricelist(Operatingcity, BusinessSegment, SubBusinessSegment);
+}
+function SetXML_Lookup(lookup) {
+  var currentlookup = new Array();
+  currentlookup[0] = new Object();
+  currentlookup[0].id = lookup.Id;
+  currentlookup[0].name = lookup.Name;
+  currentlookup[0].entityType = lookup.LogicalName;
+
+  return currentlookup;
+}
+
+function addCities_In_Pricelist(Operatingcity, BusinessSegment, SubBusinessSegment) {
+  var city = Operatingcity;
+  var cityid = city[0].id;
+  var cityname = city[0].name;
+  var cityentitytype = city[0].entityType;
+  var viewId = "{a76b2c46-c28e-4e5e-9ddf-956b71202c9d}";
+  var entityName = "pricelevel";// Entity to be filtered
+  var viewDisplayName = "Filtered Price List By City"; // Custom name for the lookup window.
+
+  var BusinessSegment = BusinessSegment;
+  var BusinessSegmentid = BusinessSegment[0].id;
+  var BusinessSegmentname = BusinessSegment[0].name;
+  var BusinessSegmenttype = BusinessSegment[0].entityType;
+
+  var SubBusinessSegment = SubBusinessSegment;
+  var SubBusinessSegmentid = SubBusinessSegment[0].id;
+  var SubBusinessSegmentname = SubBusinessSegment[0].name;
+  var SubBusinessSegmenttype = SubBusinessSegment[0].entityType;
+
+
+  var fetchxml = "<fetch version='1.0' output-format='xml-platform' mapping='logical' distinct='false'>" +
+      "<entity name='pricelevel'>" +
+      "<attribute name='name' />" +
+      "<attribute name='transactioncurrencyid' />" +
+      "<attribute name='enddate' />" +
+      "<attribute name='begindate' />" +
+      "<attribute name='statecode' />" +
+      "<attribute name='pricelevelid' />" +
+      "<order attribute='name' descending='false' />" +
+      "<filter type='and'>" +
+      "<condition attribute='alletech_applicablecity' operator='eq' uiname= '" + cityname + "' uitype= '" + cityentitytype + "' value= '" + cityid + "' />" +
+      "<condition attribute='alletech_businesssegment' operator='eq' uiname= '" + BusinessSegmentname + "' uitype= '" + BusinessSegmenttype + "' value= '" + BusinessSegmentid + "' />" +
+      "<condition attribute='alletech_subbusinesssegment' operator='eq' uiname= '" + SubBusinessSegmentname + "' uitype= '" + SubBusinessSegmenttype + "' value= '" + SubBusinessSegmentid + "' />" +
+      "</filter>" +
+      "</entity>" +
+      "</fetch>";
+  var layoutXml = "<grid name='resultset' " +
+      "object='1' " +
+      "jump='name' " +
+      "select='1' " +
+      "icon='1' " +
+      "preview='1'>" +
+      "<row name='result' " +
+      "id='pricelevelid'>" +
+      "<cell name='name' " +
+      "width='300' />" +
+      "<cell name='createdon' " +
+      "width='100' />" +
+      "</row>" +
+      "</grid>";
+  Xrm.Page.getControl("pricelevelid").addCustomView(viewId, entityName, viewDisplayName, fetchxml, layoutXml, true);
+  Xrm.Page.getAttribute("pricelevelid").setSubmitMode("always");
+}
+
+//onPageLoadBusinessSegmentBusiness Segment
+function onPageLoadBusinessSegment() {
+
+  var lookup = new Array();
+  lookup = Xrm.Page.getAttribute("alletech_businesssegmentglb").getValue();
+
+  if (lookup != null) {
+      var BusinessSegmentChang = lookup[0].name;
+
+      if (BusinessSegmentChang == "Business" || BusinessSegmentChang == "BUSINESS") {
+
+          Xrm.Page.getControl("alletech_subbusinesssegment").setVisible(false);
+
+      }
+
+      if (BusinessSegmentChang == "Home" || BusinessSegmentChang == "HOME") {
+
+          Xrm.Page.getControl("alletech_subbusinesssegment").setVisible(true);
+          //Xrm.Page.getControl("alletech_society").setVisible(false); //Society
+      }
+
+  }
+}
+
+// Set the visibility of spokes Address Grid
+function SetVisibilitySpokesAddress() {
+  debugger;
+  //var Oppurreq = Xrm.Page.getAttribute("alletech_opportunityrequirmentglb").getText();
+  //var Oppurreq = Xrm.Page.getAttribute("alletech_opportunityrequirmentglb").getValue();
+
+  if (Xrm.Page.getAttribute("alletech_productsegment") != null && Xrm.Page.getAttribute("alletech_productsegment").getValue() != null) {
+      var prodSeg = Xrm.Page.getAttribute("alletech_productsegment").getValue();
+
+      if (prodSeg[0].name == "MAC (Metro Access Connect)" || prodSeg[0].name == "CAC (Carrier Access Connect)") {
+          Xrm.Page.ui.tabs.get("tab_Details").sections.get("Sec_InstallationAddress_grid").setVisible(true);
+      }
+      else {
+          Xrm.Page.ui.tabs.get("tab_Details").sections.get("Sec_InstallationAddress_grid").setVisible(false);
+      }
+  }
+  else
+      Xrm.Page.ui.tabs.get("tab_Details").sections.get("Sec_InstallationAddress_grid").setVisible(false);
+}
+
+//////////////////////////////////Function////////////////////
+function Area() {
+  debugger;
+  var area = new Array();
+  area = Xrm.Page.getAttribute("alletech_area").getValue();
+  if (area != null) {
+      var areaname = area[0].name;
+      if (areaname == "Other") {
+          Xrm.Page.ui.controls.get("alletech_specifyarea").setVisible(true);
+          Xrm.Page.getAttribute("alletech_specifyarea").setRequiredLevel("required");
+      }
+
+  }
+  else {
+      Xrm.Page.ui.controls.get("alletech_specifyarea").setVisible(false);
+      Xrm.Page.getAttribute("alletech_specifyarea").setRequiredLevel("none");
+      Xrm.Page.getAttribute("alletech_specifyarea").setValue(null);
+  }
+}
+
+//////////////////////////////////////////////////////////////
+function building() {
+  debugger;
+  var area = new Array();
+  area = Xrm.Page.getAttribute("alletech_buildingname").getValue();
+  if (area != null) {
+      var areaname = area[0].name;
+      if (areaname == "Other") {
+          Xrm.Page.ui.controls.get("alletech_specifybuilding").setVisible(true);
+          Xrm.Page.getAttribute("alletech_specifybuilding").setRequiredLevel("required");
+      }
+
+  }
+  else {
+      Xrm.Page.ui.controls.get("alletech_specifybuilding").setVisible(false);
+      Xrm.Page.getAttribute("alletech_specifybuilding").setRequiredLevel("none");
+      Xrm.Page.getAttribute("alletech_specifybuilding").setValue(null);
+  }
+}
+//////////////////////////////////////
+function product() {
+
+  Xrm.Page.getAttribute("alletech_getrelatedproducts").setValue(1);
+  Xrm.Page.data.entity.save();
+  setTimeout("SetVisibilitySpokesAddress();", 2500);
+
+}
+
+//Function to hide generate feasibility and get related product button
+function HideButton() {
+ // debugger;
+  var writeInProducts = document.getElementById("navWriteInProducts");
+  if (writeInProducts != null) {
+      writeInProducts.style.display = "none";
+  }
+  setTimeout(HideButton, 1000);
+  var btn1 = window.top.document.getElementById("opportunity|NoRelationship|Form|alletech.opportunity.Button1.Button");
+//alert("Button genrate Feasibility alet 1 : "+btn1);
+  var btn2 = window.top.document.getElementById("opportunity|NoRelationship|Form|alletech.opportunity.Button2.Button");
+//alert("Button Get Related product alet2 : "+btn2);
+  var business_segment = Xrm.Page.getAttribute("alletech_businesssegmentglb").getValue();
+ var Sub_buss = Xrm.Page.getAttribute("alletech_subbusinesssegment").getValue();
+  if (business_segment != null) {
+      var name = business_segment[0].name;
+      if (name != "Business") {
+          if (btn1 != null) {
+              btn1.style.display = "none";
+          }
+          if (btn2 != null) {
+              btn2.style.display = "none";
+          }
+      }
+      else {
+          if (btn1 != null) {
+              // var oppReq = Xrm.Page.getAttribute("alletech_opportunityrequirmentglb");
+              //if (oppReq != null && oppReq != undefined && oppReq.getValue() != null && oppReq.getValue() != undefined) {
+              //Modified By - Vasu
+              //Modified On - 17/5/2018
+              if (Xrm.Page.getAttribute("alletech_productsegment") != null && Xrm.Page.getAttribute("alletech_productsegment").getValue() != null) {
+                  var prodSeg = Xrm.Page.getAttribute("alletech_productsegment").getValue();
+
+                  if (prodSeg[0].name == "MAC (Metro Access Connect)" || prodSeg[0].name == "CAC (Carrier Access Connect)") {
+                      var OpportunityId = Xrm.Page.data.entity.getId();
+
+                      var addressList = getInstallationAddress(prodSeg[0].name, OpportunityId);
+
+                      if (addressList != null && addressList != undefined && addressList.length < 1) {
+                          btn1.style.display = "none";
+                      }
+                      else
+                          btn1.style.display = "inline-block";
+                  }
+                  else
+                      btn1.style.display = "inline-block";
+              }
+              else
+                  btn1.style.display = "inline-block";
+          }
+          if (btn2 != null) {
+              btn2.style.display = "inline-block";
+          }
+      }
+  }
+
+  else {
+      if (btn1 != null) {
+          btn1.style.display = "inline-block";
+      }
+      if (btn2 != null) {
+          btn2.style.display = "inline-block";
+      }
+  }
+
+// modifie by Saurabh 20190919
+var bsname = Sub_buss[0].name
+if (bsname == "SDWAN"){
+       
+  Xrm.Page.ui.tabs.get("tab_10").setVisible(true);
+  Xrm.Page.ui.tabs.get("tab_11").setVisible(true);
+  Xrm.Page.ui.tabs.get("tab_12").setVisible(true);
+      Xrm.Page.ui.tabs.get("tab_6").setVisible(false);
+  Xrm.Page.ui.tabs.get("tab_Feasibility").setVisible(false);
+      btn2.style.display = "none";
+
+   }
+
+ else{
+      if (btn2 != null) {
+    btn2.style.display = "inline-block";
+    Xrm.Page.ui.tabs.get("tab_6").setVisible(true);
+    Xrm.Page.ui.tabs.get("tab_Feasibility").setVisible(true);
+    }
+ }
+}
+
+///////////////////////////////////////////////////////////////////
+
+function OnloadChnageOpptyForm() {
+  try {
+      // variable to store the name of the form
+      var lblForm; var busSeg;
+
+      var lookupObject = Xrm.Page.getAttribute("alletech_businesssegmentglb");
+      if (lookupObject != null) {
+          var lookUpObjectValue = lookupObject.getValue();
+          if ((lookUpObjectValue != null)) {
+              lblForm = lookUpObjectValue[0].name;
+              //alert(lblForm);
+              //var lookupid = lookUpObjectValue[0].id;
+          }
+      }
+      if (lblForm == "Home") {
+          ChangeOpptyForm(569480000);
+      }
+      else if (lblForm == "Business") {
+          ChangeOpptyForm(569480001);
+      }
+  }
+  catch (e) {
+  }
+} //end function
+
+
+function SwitchBusinessSegment() {
+  debugger;
+  try {
+      // Check if boolean is true or null
+      var isSwitchBS = Xrm.Page.getAttribute("alletech_switchbusseg");
+
+      if (isSwitchBS != null && isSwitchBS.getValue() != false) {
+          isSwitchBS.setValue(false);
+          isSwitchBS.setSubmitMode("always");
+      }
+      var input = confirm("Do you want to delete 'opportunity products'?");
+
+      // get the value lookup field alletech_businesssegmentglb and picklist alletech_changebusinesssegment
+      var bsType = Xrm.Page.getAttribute("alletech_changebusinesssegment");
+
+      if (bsType != null && bsType != 'undefined') {
+          if (input == true) {
+              isSwitchBS.setValue(true);
+              isSwitchBS.setSubmitMode("always");
+              Xrm.Page.data.entity.save();
+              //alert("You pressed before OK!");
+              setTimeout(ChangeOpptyForm(bsType.getValue()), 5000);
+
+              var pricelevel = Xrm.Page.getAttribute("pricelevelid");
+              if (pricelevel != null) {
+                  pricelevel.setValue(null);
+                  pricelevel.setSubmitMode("always");
+                  pricelevel.setRequiredLevel("none");
+              }
+              var subbusinesssegment = Xrm.Page.getAttribute("alletech_subbusinesssegment");
+              subbusinesssegment.setValue(null);
+              subbusinesssegment.setSubmitMode("always");
+              subbusinesssegment.setRequiredLevel("none");
+
+              var PlotnumberB = Xrm.Page.getAttribute("alletech_building");
+              if (PlotnumberB != null) {
+                  PlotnumberB.setValue(null);
+                  PlotnumberB.setSubmitMode("always");
+                  PlotnumberB.setRequiredLevel("none");
+              }
+
+              var PlotnumberH = Xrm.Page.getAttribute("alletech_housenumberplotnumberflatnumber");
+              if (PlotnumberH != null) {
+                  PlotnumberH.setValue(null);
+                  PlotnumberH.setSubmitMode("always");
+                  PlotnumberH.setRequiredLevel("none");
+              }
+
+              Xrm.Page.data.entity.save();
+              // pricelevelid
+              // alletech_subbusinesssegment
+              //alert("You pressed OK!");
+          }
+          else {
+              alert("You pressed Cancel!");
+          }
+      }
+  }
+  catch (e) {
+
+  }
+}
+
+function ChangeOpptyForm(bsType) {
+  try {
+      // variable to store the name of the form
+      var lblForm;
+
+      // switch statement to assign the form to the picklist value
+      //change the switch statement based on the forms numbers and picklist values
+      switch (bsType) {
+          case 569480000:
+              lblForm = "Home Opportunity Form";
+              break;
+          case 569480001:
+              lblForm = "Business Opportunity Form";
+              break;
+          default:
+              lblForm = "default";
+      }
+      //check if the current form is form need to be displayed based on the value
+      if (Xrm.Page.ui.formSelector.getCurrentItem().getLabel() != lblForm && lblForm != "default") {
+          var items = Xrm.Page.ui.formSelector.items.get();
+          for (var i in items) {
+              var item = items[i];
+              var itemId = item.getId();
+              var itemLabel = item.getLabel()
+
+              if (itemLabel == lblForm) {
+                  //navigate to the form
+                  item.navigate();
+              } //endif
+          } //end for
+      } //endif
+  }
+  catch (e) {
+  }
+} //end function
+
+
+var subgridId = "opportunityproductsGrid";
+function hideAddButtonSubgrid(subgridId) {
+  debugger;
+  //    alert('dddd');
+  try {
+      addEventToGridRefresh(subgridId, setAddButtonDisplayNone);
+  }
+  catch (e) {
+
+  }
+}
+
+function setAddButtonDisplayNone(subgridId) {
+  var imageId = subgridId + "_" + "addImageButton";
+  //   alert('sss' + imageId);
+  if (imageId) {
+      document.getElementById(imageId).style.display = 'none';
+  }
+  //var imageId2 = subgridId + "_" + "addImageButtonImage";
+  //document.getElementById(imageId2).style.display = 'none';
+}
+
+function addEventToGridRefresh(subgridId, functionToCall) {
+  debugger;
+  var subgridId = "opportunityproductsGrid";
+  // retrieve the subgrid
+  var grid = document.getElementById(subgridId);
+  // if the subgrid still not available we try again after 1 second
+  if (grid == null) {
+      setTimeout(function () { addEventToGridRefresh(subgridId, functionToCall); }, 1000);
+      return;
+  }
+
+  // add the function to the onRefresh event
+  grid.control.add_onRefresh(functionToCall);
+
+  var imageId = subgridId + "_" + "addImageButton";
+  if (imageId) {
+      if (document.getElementById(imageId).style.display.toLowerCase() == "block") {
+          setAddButtonDisplayNone(subgridId);
+      }
+  }
+}
+
+function HideQuotes()
+{
+debugger;
+var product= Xrm.Page.getAttribute("alletech_productsegment").getValue();
+if (product != null && product[0].name != "Business Broadband") 
+{
+Xrm.Page.ui.tabs.get("Tab_Quotes").setVisible(true);
+}
+else{
+Xrm.Page.ui.tabs.get("Tab_Quotes").setVisible(false);
+}
+}

@@ -1,0 +1,27 @@
+//hide getRelatedproductbutton on opportunity  in case of SDWAN
+//Implement by:neha
+function disableGetrelatedproduct() {
+    debugger;
+
+	 var lookupValue = new Array();
+	lookupValue =Xrm.Page.getAttribute("alletech_subbusinesssegment").getValue(); // Get SubBusiness segment get value through arrary
+
+	var SubBusinessSegment = lookupValue[0].name; // You need to replace the lookup field Name..
+
+   var getrelatedproduct = window.top.document.getElementById("opportunity|NoRelationship|Form|alletech.opportunity.Button2.Button");
+ 
+
+	
+	 if (SubBusinessSegment=="SDWAN")//value of lookup field=SDWAN
+     {
+           alert(SubBusinessSegment);
+       getrelatedproduct.style.display = "none"; 
+ 	   
+   }
+    else
+    {
+    getrelatedproduct.style.display = "inline-block" ;
+    }
+
+	
+   }

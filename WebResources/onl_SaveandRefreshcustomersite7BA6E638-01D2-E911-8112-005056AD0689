@@ -1,0 +1,7 @@
+//save Form and Refresh Site-Details the form
+function refresh(){
+	var oppID = Xrm.Page.getAttribute("onl_opportunityidid").getValue();
+	if(oppID == null){
+		formContext.data.refresh(true).then(successCallback, errorCallback);
+	}
+}

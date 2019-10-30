@@ -1,0 +1,5 @@
+//Added by Saurabh Tripati 07/09/2019
+//save Form and Refresh the form
+function refresh(){
+	formContext.data.refresh(true).then(successCallback, errorCallback);
+}

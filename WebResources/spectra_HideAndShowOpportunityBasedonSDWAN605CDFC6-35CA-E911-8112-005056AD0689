@@ -1,0 +1,36 @@
+//HideFeasibilityBasedOnSDWAN And set required field for lead Questioneries 
+//modified by Neha
+
+function HideFeasibilityBasedOnSDWAN()
+{
+
+	debugger ;   
+	var lookupValue = new Array();
+	lookupValue =Xrm.Page.getAttribute("alletech_subbusinesssegment").getValue(); // Get SubBusiness segment get value through arrary
+
+	var SubBusinessSegment = lookupValue[0].name; // You need to replace the lookup field Name..
+
+
+	if (SubBusinessSegment == "SDWAN")//SDWAN is taken to validate the look field of Get SubBusiness
+	{
+		Xrm.Page.ui.tabs.get("tab_10").setVisible(true);
+		Xrm.Page.ui.tabs.get("tab_11").setVisible(true);
+		Xrm.Page.ui.tabs.get("tab_12").setVisible(true);
+                Xrm.Page.ui.tabs.get("tab_6").setVisible(false);
+               // Xrm.Page.ui.tabs.get("Tab_Quotes").setVisible(true);//Quotes
+		//Xrm.Page.ui.tabs.get("tab_6_section_2").setVisible(false);
+		Xrm.Page.ui.tabs.get("tab_Feasibility").setVisible(false);
+	}
+	else
+	{
+		Xrm.Page.ui.tabs.get("tab_10").setVisible(false); //SiteDetails
+		Xrm.Page.ui.tabs.get("tab_11").setVisible(false); //Pre_sales
+		Xrm.Page.ui.tabs.get("tab_12").setVisible(false);//Lead for SDWAN
+                               Xrm.Page.ui.tabs.get("tab_6").setVisible(true);//Product
+                //Xrm.Page.ui.tabs.get("tab_6").sections.get("tab_6_section_2").setVisible(true);
+             //  	Xrm.Page.ui.tabs.get("Tab_Quotes").setVisible(true);//Quotes
+              Xrm.Page.ui.tabs.get("tab_Feasibility").setVisible(true);
+
+	}
+
+}

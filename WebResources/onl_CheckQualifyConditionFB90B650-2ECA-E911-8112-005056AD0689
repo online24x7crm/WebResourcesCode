@@ -1,0 +1,8 @@
+/*function ChkQualify()
+{
+ var FLRStatus = Xrm.Page.getAttribute("pcl_flrstatus").getValue();
+alert(FLRStatus);
+ var Qualify = top.document.getElementById("lead|NoRelationship|Form|Mscrm.Form.lead.ConvertQuick");
+Qualify.style.display="none";
+}
+*/

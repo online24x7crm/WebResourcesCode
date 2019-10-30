@@ -1,0 +1,27 @@
+function Reopen()
+{
+//[4:05 PM] Prabhat Kumar
+    var statecode = TryParseInt(Xrm.Page.getAttribute('statecode').getValue(), null);
+if (statecode != null)
+{
+ // Open
+ if (statecode == 0)
+ {
+ alert('open');
+ }
+ // statecode 1 = Won
+ else if (statecode == 1)
+ {
+  alert('won');
+ }
+ // statecode 2 = Lost
+ else if (statecode == 2)
+ {
+  alert('lost');
+ }
+ else
+ {
+  alert('nothing');
+ }
+}
+}

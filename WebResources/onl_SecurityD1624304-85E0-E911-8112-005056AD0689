@@ -1,0 +1,50 @@
+// //Saurabh Tripathi
+// //26-sept-2019
+
+function CheckUserRole() {}
+//     debugger;
+//     var currentUserRoles = Xrm.Page.context.getUserRoles();
+//     var btn1 = window.top.document.getElementById("onl_presalestask|NoRelationship|Form|onl.onl_presalestask.Button4.Button");// Approve Buton
+//     ////alert(btn1+"1");
+//     var btn2 = window.top.document.getElementById("onl_presalestask|NoRelationship|Form|onl.onl_presalestask.Button5.Button");//Reject Button
+//     ////alert(btn2+"2");
+//     var btn3 = window.top.document.getElementById("onl_presalestask|NoRelationship|Form|onl.onl_presalestask.Approval");//submit for approval Button
+//     var socHead = "notsoc";
+//     //alert("count"+currentUserRoles.length);
+//     for (var i = 0; i < currentUserRoles.length; i++) {
+//         var userRoleId = currentUserRoles[i];
+//         //alert("roleid "+ userRoleId);
+// 		if(userRoleId ==  "a5f6d413-0dcb-e911-8112-005056ad0689")//"SOC Head")
+// 		 {
+//             socHead = "soc";
+//             //alert("SOC : "+ socHead);
+//             //return;
+//  		 }
+//     }
+//     //alert(socHead);
+//     hideButton(socHead);
+// }
+// function hideButton(socHead){
+//     //alert("Fun "+socHead);
+//     var btn1 = window.top.document.getElementById("onl_presalestask|NoRelationship|Form|onl.onl_presalestask.Button4.Button");// Approve Buton
+//     var btn2 = window.top.document.getElementById("onl_presalestask|NoRelationship|Form|onl.onl_presalestask.Button5.Button");//Reject Button
+//     var btn3 = window.top.document.getElementById("onl_presalestask|NoRelationship|Form|onl.onl_presalestask.Approval");//submit for approval Button
+//     if(socHead == "soc"){
+//         if(btn1 !=null && btn2 != null){
+//             btn3.style.display = "none";        
+//         }
+//         //alert("done");
+//     }
+//     else {
+//         if(btn3!=null){
+//             btn1.style.display = "none";
+//             btn2.style.display = "none";
+//         }
+//         //alert("one");
+//     }
+// }
+
+
+// //Soc GUID: A5F6D413-0DCB-E911-8112-005056AD0689
+
+// // A5F6D413-0DCB-E911-8112-005056AD0689

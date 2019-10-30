@@ -1,0 +1,21 @@
+function hideplusebutonofpresales() {
+
+   // alert('ji');
+
+var gridPresales =  Xrm.Page.getControl("CustomerSite");
+
+if (gridPresales == null) {
+setTimeout(" hideplusebutonofpresales();", 2000);
+return;
+    }
+    else{
+
+var gridguidPresales = document.getElementById("CustomerSite").control;
+ alert(gridguidPresales.GetRecordsFromInnerGrid().length);
+if (gridguidPresales.GetRecordsFromInnerGrid().length > 0) 
+    { 
+   
+    document.getElementById("CustomerSite_addImageButton").style.display = "none";
+    }
+}
+}

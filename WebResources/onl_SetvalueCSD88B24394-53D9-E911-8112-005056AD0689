@@ -1,0 +1,6 @@
+function SetValue(){
+
+lookupValue =Xrm.Page.getAttribute("onl_subbusinesssegment").setValue(SDWAN);
+lookupValue =Xrm.Page.getAttribute("spectra_businesssegmentonl").setValue(business);
+
+}

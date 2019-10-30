@@ -1,0 +1,23 @@
+//Hide field on presalestask based on status
+
+function status() {
+
+var status =  Xrm.Page.getAttribute("onl_status").getValue();
+
+if (status == 122050002 )//reject
+{
+        Xrm.Page.getControl("onl_reasons").setRequiredLevel("required");
+        Xrm.Page.getControl("onl_reasons").setVisible(true);
+	    
+
+
+}
+else{
+     Xrm.Page.getControl("onl_reasons").setRequiredLevel("none");
+     Xrm.Page.getControl("onl_reasons").setVisible(false);
+	 
+
+
+}
+
+}

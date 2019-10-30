@@ -1,0 +1,98 @@
+//Saurabh Tripathi
+//25-09-19
+
+function saveandclose(){
+    var notes = Xrm.Page.getAttribute("onl_notesattached").getValue();
+    //alert(notes);
+    if(notes == 1){
+        
+        Xrm.Page.getAttribute("onl_notesattached").setValue(0);    
+        Xrm.Page.data.entity.save("saveandclose");
+        Xrm.Page.ui.close();
+        Xrm.Page.data.refresh();
+        //Xrm.Page.data.entity.refresh();
+        if (parent.opener != undefined) {
+            Xrm.Page.data.refresh();
+            Xrm.Page.data.entity.save("saveandrefresh");
+//Xrm.page.data.refresh();
+            window.parent.close(); 
+            //  window.parent.refresh();
+        } 
+        else 
+        Xrm.Page.ui.close();
+
+
+    }     
+    
+}
+
+///===============Set=inactive============================
+//Saurabh Tripathi
+//06-10-2019
+
+function setInactivepre(){
+    debugger; 
+    var oppID = Xrm.Page.getAttribute("onl_opportunityid").getValue(); 
+    //alert("site ID: "+oppID);
+    var query = "OpportunitySet?$select=StatusCode&$filter=OpportunityId eq guid'" + oppID[0].id + "'";
+    var product = getData(query);
+    //alert("Name "+product.d.results[0].ProductId.Name);
+    // alert("ID "+product.d.results[0].ProductId.Id);
+    // alert("Name "+product.d.results[0].ProductId.LogicalName);
+    if(product != "hmmm"){
+    //alert(product.d.results[0].StatusCode.Value);
+    if(  product.d.results.length !=0 && product.d.results[0].StatusCode.Value != null){
+                if(product.d.results[0].StatusCode.Value == 3){
+                    //alert("jj");
+                   // Xrm.Page.data.entity.save();
+                   ReadOnly();
+
+                    //Xrm.Page.getAttribute("statecode").setValue(1); 
+                   //Xrm.Page.data.entity.save();
+                }
+                else{
+                    //alert("kkkk");
+                    Xrm.Page.getAttribute("statecode").setValue(0); 
+                   Xrm.Page.data.entity.save();
+                }
+        }
+    }
+    //alert("error");
+}
+
+function ReadOnly ()
+{
+    debugger;
+    var controls = Xrm.Page.ui.controls.get();
+    for (var i in controls)
+    {
+        var control = controls[i];
+        if (!control.getDisabled())
+        {
+            control.setDisabled(true);
+        }
+    }
+}
+
+function getData(queryString) {
+    debugger;
+    var retrievedData;
+    var oDataEndpointUrl = Xrm.Page.context.getClientUrl() + "/XRMServices/2011/OrganizationData.svc/" + queryString;// var oDataEndpointUrl = "https://snetdev.spectranet.in/XRMServices/2011/OrganizationData.svc/" + queryString;
+    console.info(Xrm.Page.context.getClientUrl() + "/XRMServices/2011/OrganizationData.svc/" + queryString);
+    $.ajax({
+        type: "GET",
+        async: false,
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        url: oDataEndpointUrl,
+        success: function (sucess) {
+            console.info(sucess);
+            retrievedData = sucess;
+        },
+        error: function (error) {
+            retrievedData = "hmmm";
+        }
+    });
+    //alert(retrievedData);
+    return retrievedData;
+}

@@ -1,0 +1,188 @@
+//=========================================Get=Data========================
+function getData(queryString) {
+    debugger;
+    var retrievedData;
+    var oDataEndpointUrl = Xrm.Page.context.getClientUrl() + "/XRMServices/2011/OrganizationData.svc/" + queryString;// var oDataEndpointUrl = "https://snetdev.spectranet.in/XRMServices/2011/OrganizationData.svc/" + queryString;
+    console.info(Xrm.Page.context.getClientUrl() + "/XRMServices/2011/OrganizationData.svc/" + queryString);
+    $.ajax({
+        type: "GET",
+        async: false,
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        url: oDataEndpointUrl,
+        success: function (sucess) {
+            console.info(sucess);
+            retrievedData = sucess;
+        },
+        error: function (error) {
+            retrievedData = "hmmm";
+        }
+    });
+    //alert(retrievedData);
+    return retrievedData;
+}
+ 
+//===========opportunity date to site====
+function setOppData(){
+    debugger;
+    var oppID = Xrm.Page.getAttribute("onl_opportunityidid").getValue(); 
+    var oppID = Xrm.Page.getAttribute("onl_opportunityidid").getValue();//Xrm.Page.data.entity.getId(); 
+    var query = "onl_customersiteSet?$select=onl_SiteType&$filter=onl_OpportunityIdId/Id  eq guid'" + oppID[0].id + "'";
+    var site = getData(query);
+    if(data != "hmmm")
+        var len = site.d.results.length;
+    if (len==0)
+    {
+    var query = "OpportunitySet?$select=alletech_leadIdlookup,alletech_emailid,alletech_mobileno,alletech_city, alletech_state,alletech_building, alletech_floor, alletech_block, alletech_BuildingName, alletech_street, alletech_area, alletech_Landmarkifany&$filter=OpportunityId eq guid'" + oppID[0].id + "'";
+    var data = getData(query);
+	
+    if(data != "hmmm"){
+            var name = data.d.results[0].alletech_leadIdlookup || "";
+            name[0] = new Object();
+            name[0].id = data.d.results[0].alletech_leadIdlookup.Id ; // set ID to ID
+            name[0].name = data.d.results[0].alletech_leadIdlookup.Name ; //set name to name
+            name[0].entityType = data.d.results[0].alletech_leadIdlookup.LogicalName ; //optional
+            //alert(name[0].name);
+           
+			//name = name.replace(null, "");
+            var email = data.d.results[0].alletech_emailid;
+            //email = email.replace(null, "");
+            var mobile = data.d.results[0].alletech_mobileno;
+            //mobile = mobile.replace(null, "");
+            var street = data.d.results[0].alletech_street;
+            //street = street.replace(null, "");
+            var buldNo = data.d.results[0].alletech_building || "";
+          //  alert(buldNo);
+            //buldNo = buldNo.replace(null, "");
+			
+            var Landmark = data.d.results[0].alletech_Landmarkifany || "";
+           // alert( Landmark );
+            //Landmark = Landmark.replace(null, "");
+            var city = new Array(); //create a new object array
+            city[0] = new Object();
+            city[0].id = data.d.results[0].alletech_city.Id ; // set ID to ID
+            city[0].name = data.d.results[0].alletech_city.Name ; //set name to name
+            city[0].entityType = data.d.results[0].alletech_city.LogicalName ; //optional
+            //city[0].name = city[0].name.replace(null, "");
+            var state = new Array(); //create a new object array
+            state[0] = new Object();
+            state[0].id = data.d.results[0].alletech_state.Id ; // set ID to ID
+            state[0].name = data.d.results[0].alletech_state.Name ; //set name to name
+            state[0].entityType = data.d.results[0].alletech_state.LogicalName ; //optional
+            //state[0].name = state[0].name.replace(null, "");
+            
+            var buildName = new Array(); //create a new object array
+            buildName[0] = new Object();
+            buildName[0].id = data.d.results[0].alletech_BuildingName.Id ; // set ID to ID
+            buildName[0].name = data.d.results[0].alletech_BuildingName.Name; //set name to name
+            buildName[0].entityType = data.d.results[0].alletech_BuildingName.LogicalName ; //optional
+            //buildName[0].name = buildName[0].name.replace(null, "");
+            
+            var area = new Array(); //create a new object array
+            area[0] = new Object();
+            area[0].id = data.d.results[0].alletech_area.Id ; // set ID to ID
+            area[0].name = data.d.results[0].alletech_area.Name ; //set name to name
+            area[0].entityType = data.d.results[0].alletech_area.LogicalName ; //optional
+            //area[0].name = area[0].name.replace(null, "");
+            
+            var floor = data.d.results[0].alletech_floor || "";
+            //floor = floor.replace(null, "");
+            var block = data.d.results[0].alletech_block || "";
+            var address ="";
+     //     if(buldno!=null)
+      //      {
+       //         address=address+buldno;
+         //       address = ", ";
+         //  }             // if(floor !=undefined && floor!=null)
+            // {
+            //     address=address+floor;
+            //     address = ", ";
+            // } 
+            // if(block !=undefined && block!=null)
+            // {
+            //     address=address+block;
+            //     address = ", ";
+            // } 
+            // if(buildName[0].name !=undefined && buildName[0].name!=null)
+            // {
+            //     address=address+buildName[0].name;
+            //     address = ", ";
+            // } 
+            // if(street != undefined && street != null)
+            // {
+            //     address=address+street;
+            //     address = ", ";
+            // } 
+            // if(area[0].name !=undefined && area[0].name!=null)
+            // {
+            //     address=address+area[0].name;
+            //     address = ", ";
+            // } 
+            
+            // if(Landmark !=undefined && Landmark!=null)
+            // {
+            //     address=address+Landmark;
+            //     //address = ", ";
+            // } 
+            if((Landmark === undefined || Landmark == null || Landmark.length <= 0)&&(street === undefined || street == null || street.length <= 0)&&(block === undefined || block == null || block.length <= 0)&&(buildName[0].name === undefined || buildName[0].name == null || buildName[0].name.length <= 0)){
+			address =  buldNo+","+floor+","+area[0].name;
+			
+			}else if((Landmark === undefined || Landmark == null || Landmark.length <= 0)&&(street === undefined || street == null || street.length <= 0)){
+			
+			
+			address =  buldNo+","+floor+","+buildName[0].name+","+area[0].name;
+			
+			}else if((Landmark === undefined || Landmark == null || Landmark.length <= 0)&&(buildName[0].name === undefined || buildName[0].name == null || buildName[0].name.length <= 0)){
+			address =  buldNo+","+floor+","+street+","+area[0].name;
+			
+			}
+			else if(block === undefined || block == null || block.length <= 0){
+			
+			
+			
+            address =  buldNo+","+floor+","+buildName[0].name+","+street+","+area[0].name+","+Landmark;
+		}else if(street === undefined || street == null || street.length <= 0){
+		
+		address =  buldNo+","+floor+","+block+","+buildName[0].name+","+area[0].name+","+Landmark;
+		
+		
+		}else if(Landmark === undefined || Landmark == null || Landmark.length <= 0){
+		address =  buldNo+","+floor+","+block+","+buildName[0].name+","+street+","+area[0].name;
+		
+		}else if(buildName[0].name === undefined || buildName[0].name == null || buildName[0].name.length <= 0){
+		
+		address =  buldNo+","+floor+","+block+","+street+","+area[0].name+","+Landmark;
+		
+		}
+		else{
+		address =  buldNo+","+floor+","+block+","+buildName[0].name+","+street+","+area[0].name+","+Landmark;
+		
+		}
+           
+		
+		var str = address;
+ //alert( str);
+		var res = str.replace("null,", "");
+   
+
+		//alert(res);	
+	    Xrm.Page.getAttribute("onl_address").setValue(res);
+            Xrm.Page.getAttribute("onl_state").setValue(state);
+            Xrm.Page.getAttribute("onl_city").setValue(city);
+            Xrm.Page.getAttribute("spectra_customername").setValue(name[0].name);
+            Xrm.Page.getAttribute("onl_ol_customercontactnumber").setValue(mobile);
+            Xrm.Page.getAttribute("onl_customeremailaddress").setValue(email);
+            
+
+        }
+    }
+    //else alert(data);
+    //alert("ji");
+}
+
+function replaceStr(str, find, replace) {
+    for (var i = 0; i < find.length; i++) {
+        str = str.replace(new RegExp(find[i], ''), replace[i]);
+    }
+    return str;
+}

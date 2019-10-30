@@ -1,0 +1,16 @@
+//hide Submit  button On Load for PresalesTask
+function Submitbutton() {
+    var status = Xrm.Page.getAttribute("onl_status").getValue();
+	var reject = window.top.document.getElementById("onl_presalestask|NoRelationship|Form|onl.onl_presalestask.Command2.Command");
+	 
+	 if(status == 122050003 || status == 122050001) {
+	 reject.style.display = "none";
+	 
+	 }
+	 else if(status == 122050002 || status == 122050000)
+	 {
+	   reject.style.display = "block";
+	 }
+	 
+
+}

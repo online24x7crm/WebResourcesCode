@@ -1,0 +1,11 @@
+// JavaScript source code
+function GetGridCount() {
+    debugger;
+    var presalestaskSubgridCount = Xrm.Page.getControl("Presales_Task").getGrid().getTotalRecordCount();
+    if (presalestaskSubgridCount > 1) {
+        return = false;
+    }
+
+    setTimeout("GetGridCount()", 5000);
+
+}

@@ -1,0 +1,210 @@
+//Saurabh Tripathi 04-10-19
+//=========================================Get=Data========================
+function getData(queryString) {
+    debugger;
+    var retrievedData;
+    var oDataEndpointUrl = Xrm.Page.context.getClientUrl() + "/XRMServices/2011/OrganizationData.svc/" + queryString;// var oDataEndpointUrl = "https://snetdev.spectranet.in/XRMServices/2011/OrganizationData.svc/" + queryString;
+    console.info(Xrm.Page.context.getClientUrl() + "/XRMServices/2011/OrganizationData.svc/" + queryString);
+    $.ajax({
+        type: "GET",
+        async: false,
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        url: oDataEndpointUrl,
+        success: function (sucess) {
+            console.info(sucess);
+            retrievedData = sucess;
+        },
+        error: function (error) {
+            retrievedData = "hmmm";
+        }
+    });
+    //alert(retrievedData);
+    return retrievedData;
+}
+//Saurabh Tripathi 04-10-19
+//======================Calculate Total Amount in Site=================================
+function totalAmount(){
+    debugger; 
+    var siteID = Xrm.Page.data.entity.getId();
+    var query = "OpportunityProductSet?" + "$select=ExtendedAmount&$filter=onl_customerDetailsId/Id  eq guid'" + siteID + "'";
+    var totalAmt = getData(query);
+    var totalAmounttt=0;
+    if(totalAmt != "hmmm"){
+        var len = totalAmt.d.results.length
+        for(var i=0; i<len; i++){
+            totalAmounttt = totalAmounttt + parseInt(totalAmt.d.results[i].ExtendedAmount.Value);
+        }
+    }
+    Xrm.Page.getControl("spectra_totalamountss").setDisabled(false);    
+    Xrm.Page.getAttribute("spectra_totalamountss").setValue(totalAmounttt);
+}
+
+//===============================================================================
+//Saurabh Tripathi
+//05-10-19
+//Setting the Type of Site in Site details
+function setTypeofSite(){
+    debugger;
+    var oppID = Xrm.Page.getAttribute("onl_opportunityidid").getValue();//Xrm.Page.data.entity.getId(); 
+    var query = "onl_customersiteSet?$select=onl_SiteType&$filter=onl_OpportunityIdId/Id  eq guid'" + oppID[0].id + "'";
+    var site = getData(query);
+    var len = site.d.results.length;
+    var hub=0;
+    for(var i=0; i<len; i++){
+        if(parseInt(site.d.results[i].onl_SiteType.Value)==122050000){//Welcome@0909
+            hub++;
+        }
+     }
+     if(Xrm.Page.getAttribute("onl_sitetype").getValue()==null){
+        if(hub==0){
+            Xrm.Page.getAttribute("onl_sitetype").setValue(122050000);
+            //Xrm.Page.getControl("onl_sitetype").setDisabled(true);//Page.getAttribute("onl_sitetype").setDisabled(true);
+        }
+        else
+            Xrm.Page.getAttribute("onl_sitetype").setValue(122050001);
+            //Xrm.Page.getControl("onl_sitetype").setDisabled(true);//Xrm.Page.getAttribute("onl_sitetype").setDisabled(true);
+            
+    }
+    //Xrm.Page.data.entity.save();    
+    //Xrm.Page.getControl("onl_sitetype").setDisabled(true);
+    //Xrm.Page.getControl("spectra_totalamountss").setDisabled(true);    
+}
+
+//===============Set=Product=Field============================
+//Saurabh Tripathi
+//06-10-2019
+
+function setProduct(){
+    debugger; 
+    var siteID = Xrm.Page.data.entity.getId();
+    var query = "OpportunityProductSet?$select=ProductId,ExtendedAmount&$orderby=ExtendedAmount asc&$filter=onl_customerDetailsId/Id eq guid'" + siteID + "'";
+    var product = getData(query);
+    if(product != "hmmm"){
+        if(  product.d.results.length !=0 && product.d.results[0].ProductId.Name != null){
+            var value = new Array(); //create a new object array
+            value[0] = new Object();
+            value[0].id = product.d.results[0].ProductId.Id ; // set ID to ID
+            value[0].name = product.d.results[0].ProductId.Name ; //set name to name
+            value[0].entityType =product.d.results[0].ProductId.LogicalName ; //optional
+            Xrm.Page.getControl("onl_product").setDisabled(false);
+            Xrm.Page.getAttribute("onl_product").setValue(value); //set the value.
+            //else Xrm.Page.getControl("onl_product").setDisabled(true);
+        }
+        else{
+            //alert(product.d.results.length);   
+            Xrm.Page.getAttribute("onl_product").setValue(null);
+            //alert(Xrm.Page.getAttribute("onl_product").getValue());
+        }
+    }
+    else{
+        //alert("hh");
+        Xrm.Page.getAttribute("onl_product").setValue(null); //set the value.            
+        // Xrm.Page.data.entity.save();    
+        // Xrm.Page.getControl("onl_product").setDisabled(true);
+    }
+}
+
+//=================Set Get Related Product============
+//Saurabh Tripathi
+//12-10-2019
+
+function getRelatedProduct(){
+    debugger; 
+    var siteID = Xrm.Page.data.entity.getId();
+    var query = "OpportunityProductSet?" + "$select=ExtendedAmount&$filter=onl_customerDetailsId/Id  eq guid'" + siteID + "'";
+    var totalAmt = getData(query);
+    if(totalAmt != "hmmm"){
+        var len = totalAmt.d.results.length
+        if(len == 1){
+            Xrm.Page.getAttribute("onl_getrelatedproducts").setValue(1);
+            //Xrm.Page.data.entity.save();
+        }
+        else{
+            Xrm.Page.getAttribute("onl_getrelatedproducts").setValue(0);
+            //Xrm.Page.data.entity.save();
+        }
+    }
+    else{
+        Xrm.Page.getAttribute("onl_getrelatedproducts").setValue(0);
+        //Xrm.Page.data.entity.save();
+    }
+    //Xrm.Page.data.entity.save();
+}
+
+//=================Hide Get Related Product Button============
+//Saurabh Tripathi
+//12-10-2019
+
+function getRelatedProductBtn(){
+    debugger; 
+    var btn1 = window.top.document.getElementById("onl_customersite|NoRelationship|Form|onl.onl_customersite.Button4.Button");
+    var gterel=Xrm.Page.getAttribute("onl_getrelatedproducts").getValue();
+     if(gterel){
+        return ;
+     }
+     else{
+        btn1.style.display = "none";
+    }    
+}
+
+
+
+//===============Set=inactive============================
+//Saurabh Tripathi
+//06-10-2019
+
+function setInactive(){
+    debugger; 
+    var oppID = Xrm.Page.getAttribute("onl_opportunityidid").getValue(); 
+    var query = "OpportunitySet?$select=StatusCode&$filter=OpportunityId eq guid'" + oppID[0].id + "'";
+    var product = getData(query);
+    if(product != "hmmm"){
+    if(  product.d.results.length !=0 && product.d.results[0].StatusCode.Value != null){
+                if(product.d.results[0].StatusCode.Value == 3){
+                   hidepluspro(); 
+                   ReadOnly();
+                }
+                else{
+                    Xrm.Page.getAttribute("statecode").setValue(0); 
+                }
+        }
+    }
+}
+
+function ReadOnly ()
+{
+    debugger;
+    var controls = Xrm.Page.ui.controls.get();
+    for (var i in controls)
+    {
+        var control = controls[i];
+        if (!control.getDisabled())
+        {
+            control.setDisabled(true);
+        }
+    }
+}
+
+function hidepluspro() {
+
+//alert('ji');
+
+var gridPresales =  Xrm.Page.getControl("opportunityproductsGrid");
+
+if (gridPresales == null) {
+setTimeout(" hideplus();", 2000);
+return;
+  }
+  else{
+      var gridguidPresales = document.getElementById("opportunityproductsGrid").control;
+     // alert(gridguidPresales.GetRecordsFromInnerGrid().length);
+      if (gridguidPresales.GetRecordsFromInnerGrid().length == 0 || gridguidPresales.GetRecordsFromInnerGrid().length >= 0 ) 
+      {
+          //alert("Hi");
+     document.getElementById("opportunityproductsGrid_contextualButtonsContainer").style.display = "none";
+     //window.parent.document.getElementById("customerSite_contextualButtonsContainer").style.display = "none";
+      }
+  
+  }
+}

@@ -1,0 +1,15 @@
+/Alert on Qualify button for Lead
+function QualifybuttonHideShow() {
+   // debugger;
+    var FLRStatus = Xrm.Page.getAttribute("pcl_flrstatus").getValue();
+    var Qualify = top.document.getElementById("lead|NoRelationship|Form|Mscrm.Form.lead.ConvertQuick");
+     if(FLRStatus == 1)
+	{
+		 Qualify.style.display = "block";	
+}
+	else
+	{
+		 Qualify.style.display = "none";
+	}
+
+}

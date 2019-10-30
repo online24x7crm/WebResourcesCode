@@ -1,0 +1,24 @@
+//mobile validation for Presalestask
+function mobileValidation(mobile) {
+//debugger;
+	if ( Xrm.Page.getAttribute("spectra_mobilen0").getValue() != null && Xrm.Page.getAttribute("spectra_mobilen0").getValue() != undefined)
+	{
+		var string = Xrm.Page.getAttribute("spectra_mobilen0").getValue();
+		var len = parseInt(string.length);
+		if (len < 10 || len > 10) {
+			alert("Please Enter 10 Digit Mobile no.");
+			Xrm.Page.getAttribute("spectra_mobilen0").setValue();
+		} else {
+
+			for (var i = 0; i < string.length; i++) {
+				if (string.charCodeAt(i) < 48 || string.charCodeAt(i) > 57) {//onl_ol_customercontactnumber//onl_customeremergencycontactnumber
+					alert("Inavlid Mobile No.");
+					Xrm.Page.getAttribute("spectra_mobilen0").setValue();
+                                         break;
+
+				}
+			}
+			return false;
+		}
+	}
+}

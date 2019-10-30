@@ -1,0 +1,17 @@
+function RetrieveSubGridRecords()
+{
+var presalestaskSubgridCount = Xrm.Page.getControl("Presales_Task");
+ //alert(presalestaskSubgridCount.rows.count);
+
+var rows = presalestaskSubgridCount getObject().getElementsByTagName("tr")
+        for (var i = 0; i < rows.length; i++) {
+            totalRowCount++;
+            if (rows[i].getElementsByTagName("td").length > 0) {
+                rowCount++;
+            }
+        }
+        var message = "Total Row Count: " + totalRowCount;
+        message += "\nRow Count: " + rowCount;
+        alert(message);
+
+}

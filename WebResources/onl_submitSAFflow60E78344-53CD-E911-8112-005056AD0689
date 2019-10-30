@@ -1,0 +1,25 @@
+function submit() {
+debugger;
+	try 
+	{
+
+		var entityId = Xrm.Page.data.entity.getId();
+		if (entityId != null || entityId != undefined) 
+		{
+			var safid = Xrm.Page.getAttribute("onl_name").getValue();
+			if (safid == null) 
+			{
+				alert("Please save the form first, then press Submit button")
+			}
+			else 
+			{
+				  Xrm.Page.getAttribute('onl_status').setValue(122050001);
+				  var submit = top.document.getElementById("onl_name|NoRelationship|Form|onl.onl_saf.Command1.Command");
+				  submit.style.display = "none";
+			}
+		}
+	}
+	catch(e)
+	{
+	} 
+}				

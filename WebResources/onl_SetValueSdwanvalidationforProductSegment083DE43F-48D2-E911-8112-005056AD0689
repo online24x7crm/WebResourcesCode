@@ -1,0 +1,24 @@
+//Set value sdwan in productsegment based on subbusinesssegment
+
+function SetLookupField()
+{
+   
+	var lookupValue = new Array();
+	lookupValue =Xrm.Page.getAttribute("alletech_subbusinesssegment").getValue(); // Get SubBusiness segment get value through arrary
+
+	var SubBusinessSegmentName = lookupValue[0].name; // You need to replace the lookup field Name..
+	var SubBusinessSegmentid = lookupValue[0].id;
+      	var SubBusinessSegmententitytpe = lookupValue[0].entityType;
+	
+       if (SubBusinessSegmentName == "SDWAN")
+	{
+             var value = new Array(); //create a new object array
+        value[0] = new Object();
+        value[0].id = SubBusinessSegmentid ; // set ID to ID
+      value[0].name = SubBusinessSegmentName ; //set name to name
+      value[0].entityType =SubBusinessSegmententitytpe ; //optional
+      Xrm.Page.getAttribute("alletech_productsegment").setValue(value); //set the value.
+	  Xrm.Page.ui.controls.get("alletech_productsegment").setDisabled(false);
+	  Xrm.Page.ui.controls.get("alletech_productsegment").setVisible(true);
+	} 
+}

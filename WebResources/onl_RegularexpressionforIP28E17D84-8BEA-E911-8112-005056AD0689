@@ -1,0 +1,74 @@
+   //ip validation for:x.x.x.x/mask modified by:neha
+   
+
+   function getIpRangeFromAddressAndNetmask(fieldName) {
+   
+  var ipaddress = Xrm.Page.data.entity.attributes.get(fieldName).getValue();
+    var ipformat = /((\d){1,3}\.){3}(\d){1,3}\/(\d){1,3}/;
+    if ((ipaddress != "") && (ipaddress != null)) {
+        if (!ipaddress.match(ipformat)) {
+        alert('Please enter IP Address in correct format (127.255.255.255/23)');
+            //Xrm.Utility.alertDialog(" Please enter IP Address and correct format(127.255.255.255)", null)
+         //   ipaddress = "000.000.000.000";
+            Xrm.Page.data.entity.attributes.get(fieldName).setValue("");
+        }
+    }
+	}
+	
+	function lanipaddressspectracpewl() {
+	
+	getIpRangeFromAddressAndNetmask("onl_wl_lannipaddressspectracpe");//wl lan
+	}
+	
+	function AdditionalIPPoolbetweenSpectraCPEandFW() {
+	getIpRangeFromAddressAndNetmask("onl_rl_additionalippoolbetweenspectracpeandfw");//wr lan
+	}
+	function customerexistinglan1ippool() {
+	getIpRangeFromAddressAndNetmask("onl_wr_customerexistinglan1ippool");//wr lan//
+	}
+	function customerexistinglan2ippool() {
+	
+	getIpRangeFromAddressAndNetmask("onl_wr_customerexistinglan12ppool");//wr lan//
+	}
+	function customerexistinglan3ippool() {
+	getIpRangeFromAddressAndNetmask("onl_wr_customerexistinglan13ppool");//wr lan//
+	
+	}
+	function customerexistinglannippoolwr() {
+		getIpRangeFromAddressAndNetmask("onl_wr_customerexistinglan1nppool");//wr lan//
+	
+	}
+	function additionalippoolbetweenspectracpeandexistingFW() {
+	getIpRangeFromAddressAndNetmask("onl_additionalippoolbetweenspectracpeandexist");//rl lan//
+	}
+	
+	function lanipaddressspectracpe() {
+	getIpRangeFromAddressAndNetmask("onl_rl_lan1ipaddressspectracpe");//rl lan/
+	}
+	
+	function lanippoolgateway() {
+	getIpRangeFromAddressAndNetmask("onl_rl_lan1ippoolgateway");//rl lan/
+	}
+	
+	function ippoolbetweenspectracpeandexistingl3device() {
+		getIpRangeFromAddressAndNetmask("spectra_ippoolbetweenspectracpeandexistingl3devi1");//rr wan/
+	}
+	 
+	 function lanippoolbetweenspectracpeandexistingl3device() {
+	 		getIpRangeFromAddressAndNetmask("onl_rrlanippoolbetweenspectracpeandexistingl3");//rr lan/
+	 
+	 }
+	function lanipconfiguredatspectracpe() {
+	
+	getIpRangeFromAddressAndNetmask("onl_rr_lanipconfiguredatspectracpe");//rr lan/
+	}
+	
+	function langatewayaddressatspectracpe() {
+	getIpRangeFromAddressAndNetmask("onl_rr_langatewayaddressatspectracpe");//rr lan/
+	}
+	
+	function customerexistinglannippool() {
+		getIpRangeFromAddressAndNetmask("onl_rr_customerexistinglannippool");//rr lan/
+	
+	}
+

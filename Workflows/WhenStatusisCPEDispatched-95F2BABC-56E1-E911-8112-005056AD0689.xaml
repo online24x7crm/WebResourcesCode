@@ -1,0 +1,263 @@
+<Activity x:Class="XrmWorkflow95f2babc56e1e9118112005056ad0689" xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities" xmlns:mcwc="clr-namespace:Microsoft.Crm.Workflow.ClientActivities;assembly=Microsoft.Crm.Workflow, Version=7.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" xmlns:mva="clr-namespace:Microsoft.VisualBasic.Activities;assembly=System.Activities, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" xmlns:mxs="clr-namespace:Microsoft.Xrm.Sdk;assembly=Microsoft.Xrm.Sdk, Version=7.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" xmlns:mxsq="clr-namespace:Microsoft.Xrm.Sdk.Query;assembly=Microsoft.Xrm.Sdk, Version=7.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" xmlns:mxswa="clr-namespace:Microsoft.Xrm.Sdk.Workflow.Activities;assembly=Microsoft.Xrm.Sdk.Workflow, Version=7.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" xmlns:s="clr-namespace:System;assembly=mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" xmlns:scg="clr-namespace:System.Collections.Generic;assembly=mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" xmlns:sco="clr-namespace:System.Collections.ObjectModel;assembly=mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" xmlns:srs="clr-namespace:System.Runtime.Serialization;assembly=System.Runtime.Serialization, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" xmlns:this="clr-namespace:" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <x:Members>
+    <x:Property Name="InputEntities" Type="InArgument(scg:IDictionary(x:String, mxs:Entity))" />
+    <x:Property Name="CreatedEntities" Type="InArgument(scg:IDictionary(x:String, mxs:Entity))" />
+  </x:Members>
+  <this:XrmWorkflow95f2babc56e1e9118112005056ad0689.InputEntities>
+    <InArgument x:TypeArguments="scg:IDictionary(x:String, mxs:Entity)" />
+  </this:XrmWorkflow95f2babc56e1e9118112005056ad0689.InputEntities>
+  <this:XrmWorkflow95f2babc56e1e9118112005056ad0689.CreatedEntities>
+    <InArgument x:TypeArguments="scg:IDictionary(x:String, mxs:Entity)" />
+  </this:XrmWorkflow95f2babc56e1e9118112005056ad0689.CreatedEntities>
+  <mva:VisualBasic.Settings>Assembly references and imported namespaces for internal implementation</mva:VisualBasic.Settings>
+  <mxswa:Workflow>
+    <mxswa:ActivityReference AssemblyQualifiedName="Microsoft.Crm.Workflow.Activities.ConditionSequence, Microsoft.Crm.Workflow, Version=7.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" DisplayName="ConditionStep1">
+      <mxswa:ActivityReference.Arguments>
+        <InArgument x:TypeArguments="x:Boolean" x:Key="Wait">False</InArgument>
+      </mxswa:ActivityReference.Arguments>
+      <mxswa:ActivityReference.Properties>
+        <sco:Collection x:TypeArguments="Variable" x:Key="Variables">
+          <Variable x:TypeArguments="x:Boolean" Default="False" Name="ConditionBranchStep2_condition" />
+          <Variable x:TypeArguments="x:Object" Name="ConditionBranchStep2_1" />
+          <Variable x:TypeArguments="x:Object" Name="ConditionBranchStep2_2" />
+        </sco:Collection>
+        <sco:Collection x:TypeArguments="Activity" x:Key="Activities">
+          <mxswa:GetEntityProperty Attribute="onl_spectra_orderstatus" Entity="[InputEntities(&quot;primaryEntity&quot;)]" EntityName="onl_workorders" Value="[ConditionBranchStep2_1]">
+            <mxswa:GetEntityProperty.TargetType>
+              <InArgument x:TypeArguments="s:Type">
+                <mxswa:ReferenceLiteral x:TypeArguments="s:Type">
+                  <x:Null />
+                </mxswa:ReferenceLiteral>
+              </InArgument>
+            </mxswa:GetEntityProperty.TargetType>
+          </mxswa:GetEntityProperty>
+          <mxswa:ActivityReference AssemblyQualifiedName="Microsoft.Crm.Workflow.Activities.EvaluateExpression, Microsoft.Crm.Workflow, Version=7.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" DisplayName="EvaluateExpression">
+            <mxswa:ActivityReference.Arguments>
+              <InArgument x:TypeArguments="x:String" x:Key="ExpressionOperator">CreateCrmType</InArgument>
+              <InArgument x:TypeArguments="s:Object[]" x:Key="Parameters">[New Object() { Microsoft.Xrm.Sdk.Workflow.WorkflowPropertyType.OptionSetValue, "122050001", "Picklist" }]</InArgument>
+              <InArgument x:TypeArguments="s:Type" x:Key="TargetType">
+                <mxswa:ReferenceLiteral x:TypeArguments="s:Type" Value="mxs:OptionSetValue" />
+              </InArgument>
+              <OutArgument x:TypeArguments="x:Object" x:Key="Result">[ConditionBranchStep2_2]</OutArgument>
+            </mxswa:ActivityReference.Arguments>
+          </mxswa:ActivityReference>
+          <mxswa:ActivityReference AssemblyQualifiedName="Microsoft.Crm.Workflow.Activities.EvaluateCondition, Microsoft.Crm.Workflow, Version=7.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" DisplayName="EvaluateCondition">
+            <mxswa:ActivityReference.Arguments>
+              <InArgument x:TypeArguments="mxsq:ConditionOperator" x:Key="ConditionOperator">Equal</InArgument>
+              <InArgument x:TypeArguments="s:Object[]" x:Key="Parameters">[New Object() { ConditionBranchStep2_2 }]</InArgument>
+              <InArgument x:TypeArguments="x:Object" x:Key="Operand">[ConditionBranchStep2_1]</InArgument>
+              <OutArgument x:TypeArguments="x:Boolean" x:Key="Result">[ConditionBranchStep2_condition]</OutArgument>
+            </mxswa:ActivityReference.Arguments>
+          </mxswa:ActivityReference>
+          <mxswa:ActivityReference AssemblyQualifiedName="Microsoft.Crm.Workflow.Activities.ConditionBranch, Microsoft.Crm.Workflow, Version=7.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" DisplayName="ConditionBranchStep2">
+            <mxswa:ActivityReference.Arguments>
+              <InArgument x:TypeArguments="x:Boolean" x:Key="Condition">[ConditionBranchStep2_condition]</InArgument>
+            </mxswa:ActivityReference.Arguments>
+            <mxswa:ActivityReference.Properties>
+              <mxswa:ActivityReference x:Key="Then" AssemblyQualifiedName="Microsoft.Crm.Workflow.Activities.Composite, Microsoft.Crm.Workflow, Version=7.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" DisplayName="ConditionBranchStep2">
+                <mxswa:ActivityReference.Properties>
+                  <sco:Collection x:TypeArguments="Variable" x:Key="Variables" />
+                  <sco:Collection x:TypeArguments="Activity" x:Key="Activities">
+                    <Sequence DisplayName="SetDisplayModeStep8">
+                      <mcwc:SetDisplayMode ControlId="onl_productattached" ControlType="standard" IsReadOnly="True" />
+                    </Sequence>
+                    <Sequence DisplayName="SetDisplayModeStep9">
+                      <mcwc:SetDisplayMode ControlId="onl_spectra_contactpersonname" ControlType="standard" IsReadOnly="True" />
+                    </Sequence>
+                    <Sequence DisplayName="SetDisplayModeStep10">
+                      <mcwc:SetDisplayMode ControlId="statecode" ControlType="standard" IsReadOnly="True" />
+                    </Sequence>
+                    <Sequence DisplayName="SetDisplayModeStep11">
+                      <mcwc:SetDisplayMode ControlId="onl_spectra_cpeserialnumber" ControlType="standard" IsReadOnly="True" />
+                    </Sequence>
+                    <Sequence DisplayName="SetDisplayModeStep12">
+                      <mcwc:SetDisplayMode ControlId="onl_spectra_cpetrackingnumber" ControlType="standard" IsReadOnly="True" />
+                    </Sequence>
+                    <Sequence DisplayName="SetDisplayModeStep13">
+                      <mcwc:SetDisplayMode ControlId="onl_spectra_dispatcheddate" ControlType="standard" IsReadOnly="True" />
+                    </Sequence>
+                    <Sequence DisplayName="SetDisplayModeStep15">
+                      <mcwc:SetDisplayMode ControlId="onl_rl_wannoofwanlinks" ControlType="standard" IsReadOnly="True" />
+                    </Sequence>
+                    <Sequence DisplayName="SetDisplayModeStep16">
+                      <mcwc:SetDisplayMode ControlId="onl_wanntypeonlwl" ControlType="standard" IsReadOnly="True" />
+                    </Sequence>
+                    <Sequence DisplayName="SetDisplayModeStep17">
+                      <mcwc:SetDisplayMode ControlId="onl_wannipallocationtypeonlwr" ControlType="standard" IsReadOnly="True" />
+                    </Sequence>
+                    <Sequence DisplayName="SetDisplayModeStep18">
+                      <mcwc:SetDisplayMode ControlId="onl_wannbbprovideronldh" ControlType="standard" IsReadOnly="True" />
+                    </Sequence>
+                    <Sequence DisplayName="SetDisplayModeStep19">
+                      <mcwc:SetDisplayMode ControlId="onl_spectra_wancircuitid" ControlType="standard" IsReadOnly="True" />
+                    </Sequence>
+                    <Sequence DisplayName="SetDisplayModeStep20">
+                      <mcwc:SetDisplayMode ControlId="onl_dhcp_wannbandwidthmbps" ControlType="standard" IsReadOnly="True" />
+                    </Sequence>
+                    <Sequence DisplayName="SetDisplayModeStep21">
+                      <mcwc:SetDisplayMode ControlId="onl_wanntypeonlwldh" ControlType="standard" IsReadOnly="True" />
+                    </Sequence>
+                    <Sequence DisplayName="SetDisplayModeStep22">
+                      <mcwc:SetDisplayMode ControlId="onl_wannipallocationtypeonlwldh" ControlType="standard" IsReadOnly="True" />
+                    </Sequence>
+                    <Sequence DisplayName="SetDisplayModeStep23">
+                      <mcwc:SetDisplayMode ControlId="onl_wannbbprovideronl" ControlType="standard" IsReadOnly="True" />
+                    </Sequence>
+                    <Sequence DisplayName="SetDisplayModeStep24">
+                      <mcwc:SetDisplayMode ControlId="onl_spectra_wannbandwidthmbps" ControlType="standard" IsReadOnly="True" />
+                    </Sequence>
+                    <Sequence DisplayName="SetDisplayModeStep25">
+                      <mcwc:SetDisplayMode ControlId="onl_rl_lannooflanpools" ControlType="standard" IsReadOnly="True" />
+                    </Sequence>
+                    <Sequence DisplayName="SetDisplayModeStep26">
+                      <mcwc:SetDisplayMode ControlId="onl_lannippoolonl_wl" ControlType="standard" IsReadOnly="True" />
+                    </Sequence>
+                    <Sequence DisplayName="SetDisplayModeStep27">
+                      <mcwc:SetDisplayMode ControlId="onl_spectra_lannipaddressspectracpe" ControlType="standard" IsReadOnly="True" />
+                    </Sequence>
+                    <Sequence DisplayName="SetDisplayModeStep28">
+                      <mcwc:SetDisplayMode ControlId="onl_spectra_lannippoolgateway" ControlType="standard" IsReadOnly="True" />
+                    </Sequence>
+                    <Sequence DisplayName="SetDisplayModeStep29">
+                      <mcwc:SetDisplayMode ControlId="onl_lannipallocationtousersonlwl" ControlType="standard" IsReadOnly="True" />
+                    </Sequence>
+                    <Sequence DisplayName="SetDisplayModeStep30">
+                      <mcwc:SetDisplayMode ControlId="onl_spectra_lannipallocationrange" ControlType="standard" IsReadOnly="True" />
+                    </Sequence>
+                    <Sequence DisplayName="SetDisplayModeStep31">
+                      <mcwc:SetDisplayMode ControlId="onl_wr_wan_noofwanlinks" ControlType="standard" IsReadOnly="True" />
+                    </Sequence>
+                    <Sequence DisplayName="SetDisplayModeStep32">
+                      <mcwc:SetDisplayMode ControlId="onl_wanntypeonlwr" ControlType="standard" IsReadOnly="True" />
+                    </Sequence>
+                    <Sequence DisplayName="SetDisplayModeStep33">
+                      <mcwc:SetDisplayMode ControlId="onl_wannipallocationtypeonlwl" ControlType="standard" IsReadOnly="True" />
+                    </Sequence>
+                    <Sequence DisplayName="SetDisplayModeStep34">
+                      <mcwc:SetDisplayMode ControlId="onl_wannbbprovideronldhp" ControlType="standard" IsReadOnly="True" />
+                    </Sequence>
+                    <Sequence DisplayName="SetDisplayModeStep35">
+                      <mcwc:SetDisplayMode ControlId="onl_static_wannbandwidthmbps" ControlType="standard" IsReadOnly="True" />
+                    </Sequence>
+                    <Sequence DisplayName="SetDisplayModeStep36">
+                      <mcwc:SetDisplayMode ControlId="onl_spectra_wannipaddressspectracpewithmask" ControlType="standard" IsReadOnly="True" />
+                    </Sequence>
+                    <Sequence DisplayName="SetDisplayModeStep37">
+                      <mcwc:SetDisplayMode ControlId="onl_static_wanngatewayspectracpewithmask" ControlType="standard" IsReadOnly="True" />
+                    </Sequence>
+                    <Sequence DisplayName="SetDisplayModeStep38">
+                      <mcwc:SetDisplayMode ControlId="onl_wan2typeonldh" ControlType="standard" IsReadOnly="True" />
+                    </Sequence>
+                    <Sequence DisplayName="SetDisplayModeStep39">
+                      <mcwc:SetDisplayMode ControlId="onl_wan2ipallocationtypeonlwr" ControlType="standard" IsReadOnly="True" />
+                    </Sequence>
+                    <Sequence DisplayName="SetDisplayModeStep40">
+                      <mcwc:SetDisplayMode ControlId="onl_wannbbprovideronlst" ControlType="standard" IsReadOnly="True" />
+                    </Sequence>
+                    <Sequence DisplayName="SetDisplayModeStep41">
+                      <mcwc:SetDisplayMode ControlId="onl_dhcp_wan2bandwidthmbps" ControlType="standard" IsReadOnly="True" />
+                    </Sequence>
+                    <Sequence DisplayName="SetDisplayModeStep42">
+                      <mcwc:SetDisplayMode ControlId="onl_wr_lan_additionalippoolbetweenspectra" ControlType="standard" IsReadOnly="True" />
+                    </Sequence>
+                    <Sequence DisplayName="SetDisplayModeStep43">
+                      <mcwc:SetDisplayMode ControlId="onl_additionalippoolallocationtypeonl" ControlType="standard" IsReadOnly="True" />
+                    </Sequence>
+                    <Sequence DisplayName="SetDisplayModeStep44">
+                      <mcwc:SetDisplayMode ControlId="onl_lan_additionalipconfiguredspectracpe" ControlType="standard" IsReadOnly="True" />
+                    </Sequence>
+                    <Sequence DisplayName="SetDisplayModeStep45">
+                      <mcwc:SetDisplayMode ControlId="onl_lan_additionalipgatewayspectracpe" ControlType="standard" IsReadOnly="True" />
+                    </Sequence>
+                    <Sequence DisplayName="SetDisplayModeStep46">
+                      <mcwc:SetDisplayMode ControlId="onl_customerexistinglanpoolsonl" ControlType="standard" IsReadOnly="True" />
+                    </Sequence>
+                    <Sequence DisplayName="SetDisplayModeStep47">
+                      <mcwc:SetDisplayMode ControlId="onl_lan_customerexistinglan1ippool" ControlType="standard" IsReadOnly="True" />
+                    </Sequence>
+                    <Sequence DisplayName="SetDisplayModeStep48">
+                      <mcwc:SetDisplayMode ControlId="onl_lan_customerexistinglan12ppool" ControlType="standard" IsReadOnly="True" />
+                    </Sequence>
+                    <Sequence DisplayName="SetDisplayModeStep49">
+                      <mcwc:SetDisplayMode ControlId="onl_lan_customerexistinglan13ppool" ControlType="standard" IsReadOnly="True" />
+                    </Sequence>
+                    <Sequence DisplayName="SetDisplayModeStep50">
+                      <mcwc:SetDisplayMode ControlId="onl_lan_customerexistinglan1nppool" ControlType="standard" IsReadOnly="True" />
+                    </Sequence>
+                    <Sequence DisplayName="SetDisplayModeStep51">
+                      <mcwc:SetDisplayMode ControlId="spectra_nooflan" ControlType="standard" IsReadOnly="True" />
+                    </Sequence>
+                    <Sequence DisplayName="SetDisplayModeStep52">
+                      <mcwc:SetDisplayMode ControlId="onl_lan1ippoolonl" ControlType="standard" IsReadOnly="True" />
+                    </Sequence>
+                    <Sequence DisplayName="SetDisplayModeStep53">
+                      <mcwc:SetDisplayMode ControlId="onl_rl_lanlan1ipaddressspectracpe" ControlType="standard" IsReadOnly="True" />
+                    </Sequence>
+                    <Sequence DisplayName="SetDisplayModeStep54">
+                      <mcwc:SetDisplayMode ControlId="onl_rl_lanlan1ippoolgateway" ControlType="standard" IsReadOnly="True" />
+                    </Sequence>
+                    <Sequence DisplayName="SetDisplayModeStep55">
+                      <mcwc:SetDisplayMode ControlId="onl_lan1ipallocationtousersonl" ControlType="standard" IsReadOnly="True" />
+                    </Sequence>
+                    <Sequence DisplayName="SetDisplayModeStep56">
+                      <mcwc:SetDisplayMode ControlId="onl_rl_lanlan1ipallocationrange" ControlType="standard" IsReadOnly="True" />
+                    </Sequence>
+                    <Sequence DisplayName="SetDisplayModeStep57">
+                      <mcwc:SetDisplayMode ControlId="onl_spectra_noofwanlinks" ControlType="standard" IsReadOnly="True" />
+                    </Sequence>
+                    <Sequence DisplayName="SetDisplayModeStep58">
+                      <mcwc:SetDisplayMode ControlId="onl_additionalippoolbetweenspectracpeandexist" ControlType="standard" IsReadOnly="True" />
+                    </Sequence>
+                    <Sequence DisplayName="SetDisplayModeStep59">
+                      <mcwc:SetDisplayMode ControlId="onl_rl_wanadditionalipconfiguredspectracpe" ControlType="standard" IsReadOnly="True" />
+                    </Sequence>
+                    <Sequence DisplayName="SetDisplayModeStep60">
+                      <mcwc:SetDisplayMode ControlId="onl_rl_wanadditionalipgatewayspectracpe" ControlType="standard" IsReadOnly="True" />
+                    </Sequence>
+                    <Sequence DisplayName="SetDisplayModeStep61">
+                      <mcwc:SetDisplayMode ControlId="onl_additionalippoolallocationtypeonlwr" ControlType="standard" IsReadOnly="True" />
+                    </Sequence>
+                    <Sequence DisplayName="SetDisplayModeStep62">
+                      <mcwc:SetDisplayMode ControlId="onl_lanippoolbetweenspectracpeandexistingl3de" ControlType="standard" IsReadOnly="True" />
+                    </Sequence>
+                    <Sequence DisplayName="SetDisplayModeStep63">
+                      <mcwc:SetDisplayMode ControlId="onl_lanipallocationtypebetweenspectracpeande" ControlType="standard" IsReadOnly="True" />
+                    </Sequence>
+                    <Sequence DisplayName="SetDisplayModeStep64">
+                      <mcwc:SetDisplayMode ControlId="onl_lanipconfiguredatspectracpe" ControlType="standard" IsReadOnly="True" />
+                    </Sequence>
+                    <Sequence DisplayName="SetDisplayModeStep65">
+                      <mcwc:SetDisplayMode ControlId="onl_langatewayaddressatspectracpe" ControlType="standard" IsReadOnly="True" />
+                    </Sequence>
+                    <Sequence DisplayName="SetDisplayModeStep66">
+                      <mcwc:SetDisplayMode ControlId="onl_customerexistinglanpoolsonlrr" ControlType="standard" IsReadOnly="True" />
+                    </Sequence>
+                    <Sequence DisplayName="SetDisplayModeStep67">
+                      <mcwc:SetDisplayMode ControlId="onl_customerexistinglannippool" ControlType="standard" IsReadOnly="True" />
+                    </Sequence>
+                    <Sequence DisplayName="SetDisplayModeStep68">
+                      <mcwc:SetDisplayMode ControlId="onl_rr_noofwanlinks" ControlType="standard" IsReadOnly="True" />
+                    </Sequence>
+                    <Sequence DisplayName="SetDisplayModeStep69">
+                      <mcwc:SetDisplayMode ControlId="onl_ipallocationtypebetweenspectracpeandexist" ControlType="standard" IsReadOnly="True" />
+                    </Sequence>
+                    <Sequence DisplayName="SetDisplayModeStep70">
+                      <mcwc:SetDisplayMode ControlId="onl_ippoolbetweenspectracpeandexistingl3devic" ControlType="standard" IsReadOnly="True" />
+                    </Sequence>
+                    <Sequence DisplayName="SetDisplayModeStep71">
+                      <mcwc:SetDisplayMode ControlId="onl_ipconfiguredatspectracpeincaseofstatic" ControlType="standard" IsReadOnly="True" />
+                    </Sequence>
+                    <Sequence DisplayName="SetDisplayModeStep72">
+                      <mcwc:SetDisplayMode ControlId="onl_gatewayaddressatspectracpeincaseofstatic" ControlType="standard" IsReadOnly="True" />
+                    </Sequence>
+                  </sco:Collection>
+                </mxswa:ActivityReference.Properties>
+              </mxswa:ActivityReference>
+              <x:Null x:Key="Else" />
+            </mxswa:ActivityReference.Properties>
+          </mxswa:ActivityReference>
+        </sco:Collection>
+      </mxswa:ActivityReference.Properties>
+    </mxswa:ActivityReference>
+  </mxswa:Workflow>
+</Activity>

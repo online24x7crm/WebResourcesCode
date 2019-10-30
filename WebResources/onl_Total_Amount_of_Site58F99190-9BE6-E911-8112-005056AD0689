@@ -1,0 +1,74 @@
+function totalAmount(){
+    debugger; 
+    var oppID = Xrm.Page.data.entity.getId();
+    var query1 = "OpportunityProductSet?$select=spectra_ApprovalRequried&$filter=OpportunityId/Id eq guid'" + oppID + "'";
+    var approval = getData(query1);
+    if(approval!="error"){
+        var abc = "no";
+        var len = approval.d.results.length;
+//        alert(len);
+        for(var i=0; i<len; i++){
+  //          alert(approval.d.results[i].spectra_ApprovalRequried);
+                if(Xrm.Page.getAttribute("statuscode").getValue() != 569480014){
+    //                alert(approval.d.results[i].spectra_ApprovalRequried);
+                    if(approval.d.results[i].spectra_ApprovalRequried)
+                        Xrm.Page.getAttribute("spectra_approvalrequiredflag").setValue(approval.d.results[i].spectra_ApprovalRequried);
+      //                  alert(Xrm.Page.getAttribute("spectra_approvalrequiredflag").getValue());
+                        Xrm.Page.data.entity.save();
+                }
+                    
+                }
+        }
+    else{
+        Xrm.Page.getAttribute("spectra_approvalrequiredflag").setValue(0);
+        //Xrm.Page.getAttribute("customerneed").setRequiredLevel("none");
+        //alert(Xrm.Page.getAttribute("spectra_approvalrequiredflag").getValue());
+        Xrm.Page.data.entity.save();
+        
+    }
+
+}
+  function getData(queryString) {
+    debugger;
+    var retrievedData;
+    var oDataEndpointUrl = Xrm.Page.context.getClientUrl() + "/XRMServices/2011/OrganizationData.svc/" + queryString;// var oDataEndpointUrl = "https://snetdev.spectranet.in/XRMServices/2011/OrganizationData.svc/" + queryString;
+    console.info(Xrm.Page.context.getClientUrl() + "/XRMServices/2011/OrganizationData.svc/" + queryString);
+    $.ajax({
+        type: "GET",
+        async: false,
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        url: oDataEndpointUrl,
+        success: function (sucess) {
+            console.info(sucess);
+            retrievedData = sucess;
+        },
+        error: function (error) {
+            retrievedData = "error";
+        }
+    });
+    return retrievedData;
+  }
+
+//===========opportunity date to site====
+function sample(){
+    debugger;
+    var oppId =  Xrm.Page.data.entity.getId();
+	//alert(oppId);
+    var query = "onl_customersiteSet?$select=onl_name&$filter=onl_OpportunityIdId/Id  eq guid'" + oppId + "'";
+    var site = getData(query);
+    if(site != "hmmm")
+        var len = site.d.results.length;
+        //alert("count: "+site.d.results.length);
+    if (len==0)
+    {
+      //Xrm.Page.ui.tabs.get("tab_11_section_1").setVisible(false);//Presales_Task_contextualButtonsContainer
+	  
+	  document.getElementById("Presales_Task_contextualButtonsContainer").style.display = "none";
+
+	  //writhe your code here    https://snetdev.spectranet.in//XRMServices/2011/OrganizationData.svc/onl_customersiteSet?$select=onl_name&$filter=onl_OpportunityIdId/Id  eq guid'6514184C-3CEE-E911-8112-005056AD0689'
+    }
+	else{
+	document.getElementById("Presales_Task_contextualButtonsContainer").style.display = "block";
+	}
+}

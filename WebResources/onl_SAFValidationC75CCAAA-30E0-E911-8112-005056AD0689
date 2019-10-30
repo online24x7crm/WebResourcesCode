@@ -1,0 +1,70 @@
+//Modified by:Neha
+//Copy value from installation address to Billing address
+function copy()
+{
+    debugger;
+    var Chkbox =  Xrm.Page.getAttribute("onl_billingaddresssameasinstallationaddress").getValue();
+    if (Chkbox == true) {
+        var Building = Xrm.Page.getAttribute("onl_spectra_buildingname").getValue();
+        var Buildingtype = Xrm.Page.getAttribute("onl_spectra_buildingtype").getText();//spectra_buildingtype
+        var Blocktower = Xrm.Page.getAttribute("onl_spectra_buildingnoplotno").getValue();
+        var floor = Xrm.Page.getAttribute("onl_spectra_floor").getValue();
+        var landmark = Xrm.Page.getAttribute("onl_spectra_landmark").getValue();
+        var street = Xrm.Page.getAttribute("onl_spectra_street").getValue();
+        var locality = Xrm.Page.getAttribute("onl_spectra_locality").getValue();
+        var country = Xrm.Page.getAttribute("onl_spectra_country").getValue();
+        var state = Xrm.Page.getAttribute("onl_spectra_state").getValue();
+        var city = Xrm.Page.getAttribute("onl_spectra_city").getValue();
+        var area = Xrm.Page.getAttribute("onl_spectra_area").getValue();
+        var code = Xrm.Page.getAttribute("onl_spectra_pincode").getValue();
+        var specarea= Xrm.Page.getAttribute("onl_spectra_specifyarea").getValue();
+        var specbuilding= Xrm.Page.getAttribute("onl_spectra_specifybuilding").getValue();
+		var mlid = Xrm.Page.getAttribute("onl_emailid5").getValue();
+		var phnn = Xrm.Page.getAttribute("onl_mobileno").getValue();
+
+        Xrm.Page.getAttribute("onl_buildingnameonl").setValue(Building);
+		if(Buildingtype=="Single Tenant")
+		{
+        Xrm.Page.getAttribute("onl_buildingtype").setValue(0);
+		}
+		else if(Buildingtype=="Multi Tenant")
+		{
+			Xrm.Page.getAttribute("onl_buildingtype").setValue(1);
+		}
+        Xrm.Page.getAttribute("onl_buildingnoplotnoonl").setValue(Blocktower);
+        Xrm.Page.getAttribute("onl_floor").setValue(floor);
+        Xrm.Page.getAttribute("onl_landmarkifany").setValue(landmark);
+        Xrm.Page.getAttribute("onl_street").setValue(street);
+        Xrm.Page.getAttribute("onl_localityonl").setValue(locality);
+        Xrm.Page.getAttribute("onl_countryonl").setValue(country);
+        Xrm.Page.getAttribute("onl_stateonl").setValue(state);
+        Xrm.Page.getAttribute("onl_cityonl").setValue(city);
+        Xrm.Page.getAttribute("onl_areaonl").setValue(area);
+        Xrm.Page.getAttribute("onl_pincode").setValue(code);
+         Xrm.Page.getAttribute("onl_specifybuildingonl").setValue(specbuilding);
+        Xrm.Page.getAttribute("onl_specifyareaonl").setValue(specarea);
+		Xrm.Page.getAttribute("onl_emailid").setValue(mlid);
+		Xrm.Page.getAttribute("onl_phonenumberonl").setValue(phnn);
+		}
+		else
+		{
+		Xrm.Page.getAttribute("onl_buildingnameonl").setValue(null);
+		
+        Xrm.Page.getAttribute("onl_buildingnoplotnoonl").setValue(null);
+        Xrm.Page.getAttribute("onl_floor").setValue('');
+        Xrm.Page.getAttribute("onl_landmarkifany").setValue('');
+        Xrm.Page.getAttribute("onl_street").setValue('');
+        Xrm.Page.getAttribute("onl_localityonl").setValue('');
+        Xrm.Page.getAttribute("onl_countryonl").setValue(null);
+        Xrm.Page.getAttribute("onl_stateonl").setValue(null);
+        Xrm.Page.getAttribute("onl_cityonl").setValue(null);
+        Xrm.Page.getAttribute("onl_areaonl").setValue(null);
+        Xrm.Page.getAttribute("onl_pincode").setValue('');
+         Xrm.Page.getAttribute("onl_specifybuildingonl").setValue(null);
+        Xrm.Page.getAttribute("onl_specifyareaonl").setValue('');
+		Xrm.Page.getAttribute("onl_emailid").setValue('');
+		Xrm.Page.getAttribute("onl_phonenumberonl").setValue('');
+		}
+		
+	}
+		

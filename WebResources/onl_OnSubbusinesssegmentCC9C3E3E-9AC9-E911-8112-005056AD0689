@@ -1,0 +1,80 @@
+/*//Hide and Show condition for SDWAN on subbusinesssegment
+function SubBusinessSeg() {
+
+    var SubBusinessSegment =  Xrm.Page.getAttribute("alletech_subbusinesssegment").getValue(); // You need to replace the lookup field Name..
+    var lookupValue = new Array();
+    lookupValue=  Xrm.Page.getAttribute("alletech_subbusinesssegment").getValue(); 
+   
+    var SubBusinessSegment =lookupValue[0].name;
+alert(SubBusinessSegment );
+	if (SubBusinessSegment == "SDWAN") {      
+	Xrm.Page.ui.tabs.get("tab_Feasibility").setVisible(false);
+         // Xrm.Page.ui.tabs.get("tab_6").setVisible(false);
+         // Xrm.Page.ui.tabs.get("tab_6_section_2").setVisible(false);
+		//Xrm.Page.ui.tabs.get("tab_6").sections.get("tab_6_section_2").setVisible(false);
+	   Xrm.Page.ui.tabs.get("tab_6").sections.get("tab_6_section_2").setVisible(false);
+		Xrm.Page.ui.tabs.get("tab_10").setVisible(true);
+		Xrm.Page.ui.tabs.get("tab_11").setVisible(true);
+		Xrm.Page.ui.tabs.get("tab_12").setVisible(true);
+
+           /* Xrm.Page.getAttribute("spectra_nooflocation").setRequiredLevel("required");
+            Xrm.Page.getAttribute("spectra_iscustomerusingillservices").setRequiredLevel("required");
+            Xrm.Page.getAttribute("spectra_plsmentionnumberoflinks").setRequiredLevel("required");
+            Xrm.Page.getAttribute("spectra_iscustomerusingbroadbandservices").setRequiredLevel("required");
+            Xrm.Page.getAttribute("spectra_aretheselinksbeingmanagedlinks").setRequiredLevel("required");
+            
+            Xrm.Page.getAttribute("spectra_whenisthemplscontracttoberenewed").setRequiredLevel("required");
+            Xrm.Page.getAttribute("spectra_iscustomerusinganyroutingservices").setRequiredLevel("required");
+            Xrm.Page.getAttribute("spectra_isthereexistingmplsbackbone").setRequiredLevel("required");
+           
+            
+            Xrm.Page.getAttribute("onl_currentoperationalcities").setRequiredLevel("required");
+            Xrm.Page.getAttribute("spectra_networksecurityservicesusedbycustomer").setRequiredLevel("required");
+            Xrm.Page.getAttribute("spectra_wherearetheapplicationshosted").setRequiredLevel("required");
+            Xrm.Page.getAttribute("spectra_itsupportforthecustomer").setRequiredLevel("required");
+           */
+            
+
+	}
+	else
+	{
+         Xrm.Page.ui.tabs.get("tab_Feasibility").setVisible(true);
+		//Xrm.Page.ui.tabs.get("tab_6").sections.get("tab_6_section_2").setVisible(true);
+            	//Xrm.Page.ui.tabs.get("tab_6").setVisible(true);
+               //Xrm.Page.ui.tabs.get("tab_6_section_2").setVisible(true);
+	   Xrm.Page.ui.tabs.get("tab_6").sections.get("tab_6_section_2").setVisible(true);
+
+
+		Xrm.Page.ui.tabs.get("tab_10").setVisible(false);
+		
+		Xrm.Page.ui.tabs.get("tab_11").setVisible(false);
+		Xrm.Page.ui.tabs.get("tab_12").setVisible(false);
+		
+          /*  Xrm.Page.getAttribute("spectra_nooflocation").setRequiredLevel("none");
+             Xrm.Page.getAttribute("spectra_iscustomerusingillservices").setRequiredLevel("none");
+            Xrm.Page.getAttribute("spectra_plsmentionnumberoflinks").setRequiredLevel("none");
+            Xrm.Page.getAttribute("spectra_iscustomerusingbroadbandservices").setRequiredLevel("none");
+            Xrm.Page.getAttribute("spectra_aretheselinksbeingmanagedlinks").setRequiredLevel("none");
+          
+            Xrm.Page.getAttribute("spectra_whenisthemplscontracttoberenewed").setRequiredLevel("none");
+            Xrm.Page.getAttribute("spectra_iscustomerusinganyroutingservices").setRequiredLevel("none");
+           Xrm.Page.getAttribute("spectra_isthereexistingmplsbackbone").setRequiredLevel("none");
+           
+            
+            Xrm.Page.getAttribute("onl_currentoperationalcities").setRequiredLevel("none");
+            Xrm.Page.getAttribute("spectra_networksecurityservicesusedbycustomer").setRequiredLevel("none");
+            Xrm.Page.getAttribute("spectra_wherearetheapplicationshosted").setRequiredLevel("none");
+            Xrm.Page.getAttribute("spectra_itsupportforthecustomer").setRequiredLevel("none");
+           */
+            
+
+
+
+	}
+
+}
+*/
+
+
+
+

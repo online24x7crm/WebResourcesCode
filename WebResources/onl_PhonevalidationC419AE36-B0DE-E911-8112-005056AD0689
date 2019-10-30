@@ -1,0 +1,51 @@
+//Mobile no validation on Customersite
+
+function mobileNoValidation(mobile) {
+//debugger;
+if ( Xrm.Page.getAttribute("onl_ol_customercontactnumber").getValue() != null && Xrm.Page.getAttribute("onl_ol_customercontactnumber").getValue() != undefined)
+	{
+		var string = Xrm.Page.getAttribute("onl_ol_customercontactnumber").getValue();
+		var len = parseInt(string.length);
+		if (len < 10 || len > 10) {
+			alert("Please Enter 10 Digit Mobile no.");
+			Xrm.Page.getAttribute("onl_ol_customercontactnumber").setValue();
+		} else {
+
+			for (var i = 0; i < string.length; i++) {
+				if (string.charCodeAt(i) < 48 || string.charCodeAt(i) > 57) {//onl_ol_customercontactnumber//onl_customeremergencycontactnumber
+					alert("Inavlid Mobile No.");
+					Xrm.Page.getAttribute("onl_ol_customercontactnumber").setValue();
+                                         break;
+
+				}
+			}
+			return false;
+		}
+	}
+}
+
+function Validation(mobile) {
+//debugger;
+if ( Xrm.Page.getAttribute("onl_customeremergencycontactnumber").getValue() != null && Xrm.Page.getAttribute("onl_customeremergencycontactnumber").getValue() != undefined)
+	{
+		var string = Xrm.Page.getAttribute("onl_customeremergencycontactnumber").getValue();
+		var len = parseInt(string.length);
+		if (len < 10 || len > 10) {
+			alert("Please Enter 10 Digit Mobile no.");
+			Xrm.Page.getAttribute("onl_customeremergencycontactnumber").setValue();
+		} else {
+
+			for (var i = 0; i < string.length; i++) {
+				if (string.charCodeAt(i) < 48 || string.charCodeAt(i) > 57) {//onl_ol_customercontactnumber//onl_customeremergencycontactnumber
+					alert("Inavlid Mobile No.");
+					Xrm.Page.getAttribute("onl_customeremergencycontactnumber").setValue();
+                                         break;
+
+				}
+			}
+			return false;
+		}
+	}
+	
+}
+

@@ -1,0 +1,18 @@
+// JavaScript source code
+function lookupValue() {
+
+
+    var SubBusinessSegment =  Xrm.Page.getAttribute("alletech_subbusinesssegment").getValue(); // You need to replace the lookup field Name..
+
+    var lookupValue = new Array();
+    lookupValue[SDWAN] = new Object();
+    lookupValue[a0edb940-e917-7134-3851-33bd58c84cc6].id = {a0edb940-e917-7134-3851-33bd58c84cc6}; // GUID of the lookup id
+    lookupValue[SDWAN].name = "SDWAN"; // Name of the lookup
+    lookupValue[SubSegment].entityType = "SubSegment"; //Entity Type of the lookup entity
+   
+    if (SubBusinessSegment == SDWAN) {
+        Xrm.Page.ui.tabs.get("questionaries").setVisible(false);
+        Xrm.Page.ui.tabs.get("Lead Questionnaries For SDWAN field").setVisible(true);
+    }
+
+}

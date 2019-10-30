@@ -1,0 +1,290 @@
+//Add Product on Customersite
+function onLoadOpp() {
+    debugger;
+////alert("hi");
+////alert(document.getElementById("opportunityproductsGrid_addImageButton"));
+AddButtonSubgrid();
+//alert('prabhat');
+GetSubGridRows();
+
+
+var grid = "";var gridguid =""; 
+
+    $("#opportunityproductsGrid_addImageButtonImage").click(function (event) {
+        debugger;
+
+        var id = Xrm.Page.data.entity.getId().replace("{", "").replace("}", "");
+        var priceLevelId = Xrm.Page.getAttribute("onl_pricelist").getValue();
+		var oid = Xrm.Page.getAttribute("onl_opportunityidid").getValue()[0].id; 
+//alert(oid);
+        if (priceLevelId == null) {
+            alert("You must select a price list before attempting to add a product.");
+            setTimeout(function () {
+                document.getElementById("ProductGridFlyout_flyOut").style.display = "none";
+            }, 200);
+            return;
+        }
+        var customerSegmentCode = Xrm.Page.getAttribute("spectra_customersegmentcode").getValue();
+
+        if (customerSegmentCode == null) {
+            alert("Please select a customer segment before attempting to add a product.");
+
+            setTimeout(function () {
+                document.getElementById("ProductGridFlyout_flyOut").style.display = "none";
+            }, 200);
+            return;
+        }
+		
+
+		var getrelatedproducts=Xrm.Page.getAttribute("onl_getrelatedproducts").getValue();
+		//alert(getrelatedproducts);
+
+        var oppAttributes = Xrm.Page.data.entity.attributes.get();
+		//alert(oppAttributes);
+        if (oppAttributes != null) {
+            for (var i in oppAttributes) {
+                if (oppAttributes[i].getIsDirty()) {
+                    //alert("Please Save the form and try again");
+					Xrm.Page.data.entity.save();
+                    setTimeout(function () {
+                        document.getElementById("ProductGridFlyout_flyOut").style.display = "none";
+                    }, 200);
+                   //return;
+                }
+            }
+        }
+
+
+
+        var url = "WebResources/onl_AddExistingProductonSite";
+        var x = screen.width / 2 - 700 / 2;
+        var y = screen.height / 2 - 450 / 2;
+
+        myWindow = window.open(url, "_blank", 'height=485,width=700,left=' + x + ',top=' + y);
+
+
+       myWindow.onunload = function () {
+	   //alert('unload');
+            //window.location.reload(true);
+            window.opener.location.reload();			
+            Xrm.Page.ui.controls.get("opportunityproductsGrid").refresh();
+			//AddButtonSubgrid();
+			//GetSubGridRows();
+            //var subgrid = Xrm.Page.ui.controls.get("opportunityproductsGrid");
+            //subgrid.refresh();
+        } 
+
+        //myWindow.opener.parent.focus();
+
+        setTimeout(function () {
+            document.getElementById("ProductGridFlyout_flyOut").style.display = "none";
+        }, 200);
+    });
+	
+	
+
+	
+}
+
+function AddButtonSubgrid() {
+//alert(Xrm.Page.getAttribute("onl_totalamount").getValue()+'..'+Xrm.Page.getAttribute("spectra_totalamount1").getValue());
+
+//alert("aaja");
+    // Get subgrid control
+    var subGridCtrl = Xrm.Page.getControl("opportunityproductsGrid");
+	//var a= Xrm.Page.getAttribute("spectra_totalamount1").getValue();
+	//Xrm.Page.getAttribute("onl_totalamount").setValue(a);
+
+    //alert(subGridCtrl);
+
+    // If subgrid is not loaded yet, then call same function after some time.
+    if (subGridCtrl == null) {
+        setTimeout("AddButtonSubgrid();", 1000);
+        return;
+    }
+//alert(subGridCtrl.GetRecordsFromInnerGrid().length);
+    // Get the add button
+    var addButton = document.getElementById("opportunityproductsGrid_addImageButton");
+    var hideButton = document.getElementById("opportunityproductsGrid_openAssociatedGridViewImageButton");
+
+    // show the button
+    addButton.style.display = 'inline-block';
+    hideButton.style.display = 'none';
+
+}
+
+function product() {
+    debugger;
+	
+    if(Xrm.Page.getAttribute("onl_getrelatedproducts").getValue()){
+        var a = Xrm.Page.getAttribute("onl_productpkgcount").getValue();
+        if(a==null)
+            {
+                Xrm.Page.getAttribute("onl_productpkgcount").setValue(0);
+            }
+            else{
+            Xrm.Page.getAttribute("onl_productpkgcount").setValue(a+1);
+            }
+            Xrm.Page.data.entity.save();
+			window.location.reload(true);
+		
+    }
+    return;
+}
+
+
+function GetSubGridRows() {
+//alert('ji');
+
+ grid =  Xrm.Page.getControl("opportunityproductsGrid");
+
+if (grid == null) {
+        setTimeout(" GetSubGridRows();", 2500);
+        return;
+    }
+	else{
+		gridguid = document.getElementById("opportunityproductsGrid").control;
+		if (gridguid.GetRecordsFromInnerGrid().length >= 0) { 
+			//alert(gridguid.GetRecordsFromInnerGrid().length);
+			//alert(gridguid.GetRecordsFromInnerGrid()[0][0]);
+			 var i;
+			 for (i = 0; i < gridguid.GetRecordsFromInnerGrid().length; i++) {
+				  //alert("gridBodyTable_delete_"+ gridguid.GetRecordsFromInnerGrid()[i][0]+"_"+i);
+				  document.getElementById("gridBodyTable_delete_"+ gridguid.GetRecordsFromInnerGrid()[i][0]+"_"+i).style.visibility = 'visible';
+
+				 //var btn = document.createElement("button"); 
+				 //btn.setAttribute("id", "btndelete");
+				 
+				//var t = document.createTextNode("Delete");       
+				//btn.appendChild(t);                              
+				//document.getElementById("gridBodyTable_delete_"+ gridguid.GetRecordsFromInnerGrid()[i][0]+"_"+i).appendChild(btn);
+				  //var el= document.getElementById("gridBodyTable_delete_"+ gridguid.GetRecordsFromInnerGrid()[i][0]+"_"+i);
+						//el.addEventListener("click", modifyText, false);
+				  //alert("gridBodyTable_delete_"+ gridguid.GetRecordsFromInnerGrid()[i][i]);
+				 document.getElementById("gridBodyTable_delete_"+ gridguid.GetRecordsFromInnerGrid()[i][0]+"_"+i).onclick = modifyText;
+				}
+			
+			
+        }
+	}
+}
+
+var delGuid ="";
+function modifyText() {
+	debugger;
+var str=this.id;
+var delGuid=str.match(/{([^}]+)}/g);
+//alert(delGuid);
+
+DeleteAccount(delGuid);
+
+//GetSelectedRecords();
+//alert(gridguid.get_allRecordIds());
+//alert(gridguid.get_selectedIds());
+//alert(gridguid.get_selectedRecords());
+//var guid=gridguid.get_selectedIds();
+//var xx=guid.substring(1,g.length-1);
+//console.log(xx);
+
+                
+}
+
+
+
+
+function DeleteAccount(id) {
+    // Pass the guid of the account.
+	debugger;
+	//alert('account'+delGuid);
+    var accountId = id;
+	//alert('id'+accountId);
+	var context = Xrm.Page.context;					
+    var serverUrl = context.getClientUrl();
+	//alert('serverUrl' +serverUrl);
+    //var serverUrl = Xrm.Page.context.getServerUrl();
+    var ODATA_ENDPOINT = "/XRMServices/2011/OrganizationData.svc/OpportunityProductSet";
+    var ODataPath = serverUrl + ODATA_ENDPOINT;
+	//alert(ODataPath + "(guid'" + accountId + "')");
+    $.ajax({
+        type: "POST",
+        contentType: "application/json; charset=utf-8",
+        datatype: "json",
+        url: ODataPath + "(guid'" + accountId + "')",
+        beforeSend: function (XMLHttpRequest) {
+            XMLHttpRequest.setRequestHeader("Accept", "application/json");
+            XMLHttpRequest.setRequestHeader("X-HTTP-Method", "DELETE");
+            return true;
+        },
+
+		success: function (data, textStatus, XmlHttpRequest) {
+                        if (data != null) {
+                          //alert("success");
+						  
+						  
+						  Xrm.Page.ui.controls.get("opportunityproductsGrid").refresh();
+						  //Xrm.Page.data.entity.save();
+						  //Xrm.Page.data.refresh();
+						  //AddButtonSubgrid();
+						  
+                        }
+
+                        try {
+								AddButtonSubgrid();
+							
+                        }
+                        catch (e) {
+                        }
+                    },
+
+        error: function (xmlHttpRequest, textStatus, errorThrown) {
+            //alert("Status: " + textStatus + "; ErrorThrown: " + errorThrown);
+            alert("Unable to Delete The Record...!");
+        }
+    });
+  //  Xrm.Page.ui.controls.get("opportunityproductsGrid").refresh();
+
+}
+
+
+
+
+//Never Used Start
+function addEventToGridRefresh() {
+    // retrieve the subgrid
+	alert('prabhat');
+    var grid = Xrm.Page.getControl('opportunityproductsGrid');
+    // if the subgrid still not available we try again after 2 second
+    if (grid == null) {
+        setTimeout(function () { addEventToGridRefresh(); }, 2000);
+        return;
+    }
+    // add the function to the onRefresh event
+    Xrm.Page.getControl('opportunityproductsGrid').addOnLoad(AddButtonSubgrid);
+    // This is used to delay refresh by 1 second because sometimes grid takes time to load. 
+ // If you do not include below line, you may not see '+' and associate button on grid.
+    setTimeout(function () { Xrm.Page.data.refresh(); }, 1000);
+}
+
+
+var subgridName = "opportunityproductsGrid"; 
+function GetSelectedRecords() {
+	debugger;
+    var stringOfSelectedIds = "Please Select the Record...!";
+    if (Xrm.Page.getControl(subgridName) != null) {
+        document.getElementById(subgridName).getElementsByTagName('a')[0].focus();
+    }
+    //document.getElementById(subgridName).control.a()
+    if (document.getElementById(subgridName) != null && document.getElementById(subgridName).control != null) {
+        selectedRecods = document.getElementById(subgridName).control.get_selectedIds();
+        if (selectedRecods != null && selectedRecods.length > 0) {
+            stringOfSelectedIds = selectedRecods.join();
+        }
+		//alert('alert1'+stringOfSelectedIds.substring(1,stringOfSelectedIds.length-1));
+        //delGuid=stringOfSelectedIds.substring(1,stringOfSelectedIds.length-1);
+		//alert(delGuid);
+				
+        //DeleteAccount();
+        
+    }
+}
+//Never used endF

@@ -1,0 +1,53 @@
+//By OnlineTeam 20190920
+
+function HideFeasibilityBasedOnSDWAN()
+{
+alert('aji');
+	debugger ;   
+	var lookupValue = new Array();
+	lookupValue =Xrm.Page.getAttribute("alletech_subbusinesssegment").getValue(); // Get SubBusiness segment get value through arrary
+
+	var SubBusinessSegment = lookupValue[0].name; // You need to replace the lookup field Name..
+
+
+	if (SubBusinessSegment == "SDWAN")//SDWAN is taken to validate the look field of Get SubBusiness
+	{
+		Xrm.Page.ui.tabs.get("tab_10").setVisible(true);
+		Xrm.Page.ui.tabs.get("tab_11").setVisible(true);
+		Xrm.Page.ui.tabs.get("tab_12").setVisible(true);
+        Xrm.Page.ui.tabs.get("tab_6").setVisible(false);           
+		Xrm.Page.ui.tabs.get("tab_Feasibility").setVisible(false);
+
+		//..........Field hide.........
+
+	    Xrm.Page.getControl("spectra_rackrequired").setVisible(false);
+	    Xrm.Page.getControl("spectra_lastmileconnectivity").setVisible(false);
+	    Xrm.Page.getControl("alletech_lco").setVisible(false);
+	    Xrm.Page.getControl("alletech_media").setVisible(false);
+	    Xrm.Page.getControl("alletech_interfacerequiredfirstlevel").setVisible(false);
+	    Xrm.Page.getControl("alletech_interfacerequiredsecondlevel").setVisible(false);
+	    Xrm.Page.getControl("alletech_voipportactivationcode").setVisible(false);
+	}
+	else
+	{
+        alert('ji');
+		Xrm.Page.ui.tabs.get("tab_10").setVisible(false); //SiteDetails
+		Xrm.Page.ui.tabs.get("tab_11").setVisible(false); //Pre_sales
+		Xrm.Page.ui.tabs.get("tab_12").setVisible(false);//Lead for SDWAN
+        Xrm.Page.ui.tabs.get("tab_6").setVisible(true);//Product
+        Xrm.Page.ui.tabs.get("tab_Feasibility").setVisible(true);
+
+		//..........Field hide.........
+
+	   Xrm.Page.getControl("spectra_rackrequired").setVisible(true);
+	   Xrm.Page.getControl("spectra_lastmileconnectivity").setVisible(true);
+       Xrm.Page.getControl("alletech_lco").setVisible(true);
+       Xrm.Page.getControl("alletech_voipportactivationcode").setVisible(true);
+       Xrm.Page.getControl("alletech_media").setVisible(true);
+       Xrm.Page.getControl("alletech_interfacerequiredfirstlevel").setVisible(true);
+       Xrm.Page.getControl("alletech_interfacerequiredsecondlevel").setVisible(true);
+
+
+	}
+
+}

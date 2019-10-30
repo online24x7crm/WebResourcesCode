@@ -1,0 +1,22 @@
+//ip format:x.x.x.x-x.x.x.x
+
+function validipaddressF(fieldName) {
+debugger;
+  var ipaddress = Xrm.Page.data.entity.attributes.get(fieldName).getValue();
+    var ipformat = ///^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/
+-\///^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;
+
+    if ((ipaddress != "") && (ipaddress != null)) {
+        if (!ipaddress.match(ipformat)) {
+        alert('Please enter IP Address in correct format (127.255.255.255-127.255.255.255)');
+            //Xrm.Utility.alertDialog(" Please enter IP Address and correct format(127.255.255.255)", null)
+         //   ipaddress = "000.000.000.000";
+            Xrm.Page.data.entity.attributes.get(fieldName).setValue("");
+        }
+    }
+	}
+	
+	function lanipallocationrange() {
+	validipaddressF("onl_rl_lan1ipallocationrangeincaseofdhcp");
+	
+	}

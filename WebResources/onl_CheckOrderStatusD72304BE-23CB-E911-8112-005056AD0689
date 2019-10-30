@@ -1,0 +1,15 @@
+function chk_orderstatus()
+{
+var OrderStatusfield=Xrm.Page.getControl("onl_spectra_orderstatus");
+var option=Xrm.Page.getControl("onl_spectra_orderstatus").getAttribute().getOptions();
+
+var getselectedvalue=Xrm.Page.getAttribute("onl_spectra_orderstatus").getValue();
+
+for (i=0; i< option.length ; i++ )
+{
+      if(option[i].value==getselectedvalue)
+      {
+           
+      }
+    }
+}

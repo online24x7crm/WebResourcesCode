@@ -1,0 +1,18 @@
+//to setvalue for getrelated product
+function product()
+{
+ alert('neha');
+Getrelatedproduct();
+}
+function Getrelatedproduct()
+{
+var grid = document.getElementById("opportunityproductsGrid").control;//onl_getrelatedproducts
+alert(grid2.GetRecordsFromInnerGrid().length)
+if (grid.GetRecordsFromInnerGrid().length >0){
+
+  Xrm.Page.getAttribute("onl_getrelatedproducts").setValue(1);
+}
+else{
+         setTimeout("Getrelatedproduct();", 2500);
+}
+}

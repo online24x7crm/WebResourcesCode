@@ -1,0 +1,23 @@
+function HidegridButton()
+{
+//alert('pk');
+
+var gridPresales =  Xrm.Page.getControl("customerSite");
+alert(gridPresales);
+
+if (gridPresales == null) {
+setTimeout(" HidegridButton();", 2000);
+return;
+    }
+    else{
+        var gridguidPresales = document.getElementById("customerSite").control;
+        alert(gridguidPresales.GetRecordsFromInnerGrid().length);
+        if (gridguidPresales.GetRecordsFromInnerGrid().length == 0 || gridguidPresales.GetRecordsFromInnerGrid().length >= 0 ) 
+        {
+            alert("Hi");
+
+        }
+    
+    }
+
+}

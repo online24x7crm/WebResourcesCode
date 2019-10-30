@@ -1,0 +1,8 @@
+function RetrieveSubGridPreSaleRecords() {
+    
+
+ var _rowCount = Xrm.Page.getControl("Presales_Task").getGrid().getRows();//getTotalRecordCount();
+
+    alert(_rowCount);
+   
+}
